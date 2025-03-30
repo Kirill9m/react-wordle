@@ -5,16 +5,11 @@ export const Keyboard = () => {
 
   const printKeyboard = (lang) => {
     return lang.map((key, index) => (
-      <button key={index} className={classes.keyboard}>
+      <button key={index} className={classes.keyboard__btns}>
         {key}
       </button>
     ));
   };
 
-  return (
-    <div>
-      <h1>Keyboard</h1>
-      {printKeyboard(keyboardSE)}
-    </div>
-  );
+  return <div className={classes.keyboard}>{printKeyboard(keyboardSE)}</div>;
 };

@@ -11,8 +11,6 @@ export const GameField = () => {
 
   const [tableData, setTableData] = useState(table);
 
-  console.log(tableData);
-
   return (
     <div className={classes.grid}>
       {tableData.flat().map((cell, index) => (

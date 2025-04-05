@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 
 function App() {
   const [input, setInput] = useState('');
+
+  useEffect(() => {
+    document.title = 'Wordle React'
+  }, [])
 
 
   return (

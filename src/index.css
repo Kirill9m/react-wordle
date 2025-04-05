@@ -1,24 +1,47 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-}
-
 body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  background-color: #242424;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: left;
 
-  .header__text{
+  .header__text {
     font-size: 2.5rem;
+    color: aliceblue;
+  }
+
+  .header__img {
+    height: 4em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+
+  .header__img:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+  }
+}
+
+
+
+
+/* Keyframes */
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .header__img {
+    animation: logo-spin infinite 20s linear;
   }
 }

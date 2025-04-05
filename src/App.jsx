@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import Header from './components/Header';
+import WordleGame from './components/WordleGame';
 
 function App() {
-  const [input, setInput] = useState('');
 
   useEffect(() => {
     document.title = 'Wordle React'
@@ -12,6 +12,7 @@ function App() {
   return (
     <div>
         <Header/>
+        <WordleGame/>
     </div>
   );
 }

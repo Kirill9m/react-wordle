@@ -26,6 +26,22 @@ body {
   }
 }
 
+.game__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .game__container__word {
+    color: white;
+    font-size: 2em;
+  }
+
+  .game__container__input {
+    min-width: 200px;
+    min-height: 30px;
+  }
+}
 
 
 

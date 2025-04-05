@@ -10,6 +10,9 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/api/game", gameRoutes);
+
+
 app.get('/', async(req, res) => {
   const buf = await fs.readFile('../frontend/dist/index.html')
   const html = buf.toString();

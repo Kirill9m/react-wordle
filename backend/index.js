@@ -1,5 +1,6 @@
 import express from 'express'
 import fs from 'fs/promises'
+import gameRoutes from './routes/game.js'
 
 const app = express();
 

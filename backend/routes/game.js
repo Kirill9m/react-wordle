@@ -7,7 +7,7 @@ import { currentTime } from "../logic/currentTime.js";
 const router = express.Router();
 const games = []; //MongoDB
 
-router.get("/start", (req, res) => {
+router.post("/start", (req, res) => {
   const playerId = req.body.playerId; //Req from DB in future
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";

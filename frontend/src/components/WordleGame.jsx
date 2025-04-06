@@ -10,6 +10,7 @@ const WordleGame = () => {
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState();
   const [message, setMessage] = useState('Choose settings and click Start game!');
+  const [timerRunning, setTimerRunning] = useState(false);
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -55,6 +56,7 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGameData(data);
+      setTimerRunning(true);
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -91,6 +93,7 @@ const WordleGame = () => {
 
   useEffect(() => {
     if (guessResponse?.result === true) {
+      setTimerRunning(false);
       setMessage(
         `You won! The ${id} guessed the ${guessResponse.guess} correctly. Time is ${time} seconds.`
       );
@@ -98,7 +101,7 @@ const WordleGame = () => {
   }, [guessResponse]);
 
   useEffect(() => {
-    if (!gameData || !gameData.gameStarted) return;
+    if (!gameData || !gameData.gameStarted || !timerRunning) return;
 
     const [hours, minutes, seconds] = gameData.gameStarted.split(':').map(Number);
     const [hours2, minutes2, seconds2] = currentTime().split(':').map(Number);

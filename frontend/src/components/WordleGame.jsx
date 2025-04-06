@@ -73,7 +73,7 @@ const WordleGame = () => {
       clearInterval(intervalId);
     }
   });
-
+// console.log(gameData.length)
 
   return (
     <div className="game__container">
@@ -109,6 +109,7 @@ const WordleGame = () => {
         type="text"
         value={input}
         onChange={handleInputWord}
+        maxLength={gameData?.length || wordLength}
       />
       <button onClick={sendWord}>Guess!</button>
     </div>

@@ -38,6 +38,7 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGuessResponse(data);
+      setInput('')
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -59,14 +60,17 @@ const WordleGame = () => {
     }
   };
 
+  useEffect(() => {
+    if (gameData) {
+      setMessage(gameData.status);
+    }
+  }, [gameData]);
+
   const printChars = () => {
-    if (!guessResponse?.result){
+    if (!guessResponse?.result) {
       return null;
-    }else if (guessResponse.result === true){
-      return (
-        <span>{`Right word was ${guessResponse.stone}, you won!`}</span>
-      );
-    }else {
+    } else if (guessResponse.result === true) {
+    } else {
       return guessResponse.result.map((item, index) => (
         <span
           key={index}
@@ -87,18 +91,21 @@ const WordleGame = () => {
 
   useEffect(() => {
     if (guessResponse?.result === true) {
-      setMessage(`Right word was ${guessResponse.guess}, you won!`);
+      setMessage(
+        `You won! The ${id} guessed the ${guessResponse.guess} correctly. Time is ${time} seconds.`
+      );
     }
   }, [guessResponse]);
 
   useEffect(() => {
-    if (!gameData || !gameData.gameStarted || guessResponse?.result === true) return;
+    if (!gameData || !gameData.gameStarted) return;
 
     const [hours, minutes, seconds] = gameData.gameStarted.split(':').map(Number);
     const [hours2, minutes2, seconds2] = currentTime().split(':').map(Number);
 
     const timeInSec =
       hours2 * 3600 + minutes2 * 60 + seconds2 - (hours * 3600 + minutes * 60 + seconds);
+
     const intervalId = setInterval(() => {
       setTime(timeInSec);
     }, 1000);
@@ -107,7 +114,6 @@ const WordleGame = () => {
       clearInterval(intervalId);
     };
   });
-  // console.log(gameData.length)
 
   return (
     <div className="game__container">

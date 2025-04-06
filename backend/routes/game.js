@@ -43,7 +43,7 @@ router.post("/guess", (req, res) => {
   const timeNow = currentTime();
   const timeStarted = currentGame.gameStarted;
   const gameUnique = currentGame.isUnique;
-  const result = checkWord(guess, currentGame.word, playerId);
+  const result = checkWord(guess, currentGame.word, playerId,);
 
   if (result === true) {
     delete games[playerId];

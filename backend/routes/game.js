@@ -25,7 +25,7 @@ router.post("/start", (req, res) => {
       isUnique: unique,
     };
     console.log( games[playerId] );
-    res.json({ status: `Game for playerId ${playerId} is started`, length });
+    res.json({ status: `Game for playerId ${playerId} is started`, length,  gameStarted: time});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

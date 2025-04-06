@@ -39,7 +39,7 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGuessResponse(data);
-      setInput('')
+      setInput('');
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -120,42 +120,70 @@ const WordleGame = () => {
 
   return (
     <div className="game__container">
-      <h1>{message}</h1>
-      <p>Time: {time}</p>
-      <input value={id} placeholder="Name" onChange={handleIdChange} />
-      <section>
-        <label>
-          <input
-            type="radio"
-            value="true"
-            checked={unique === 'true'}
-            onChange={handleUniqueStatus}
-          />
-          Unique
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="false"
-            checked={unique === 'false'}
-            onChange={handleUniqueStatus}
-          />
-          Not Unique
-        </label>
-      </section>
-      <p>Word length:</p>
-      <input type="number" value={wordLength} onChange={handleWordLength} />
-      <button onClick={startGame}>Start game!</button>
-      <p className="game__container__word">The guessed word is: {input.toUpperCase()}</p>
-      <input
-        className="game__container__input"
-        type="text"
-        value={input}
-        onChange={handleInputWord}
-        maxLength={gameData?.length || wordLength}
-      />
-      <button onClick={sendWord}>Guess!</button>
-      <div className="result-container">{printChars()}</div>
+      <div className={`game__top ${timerRunning ? 'hidden' : ''}`}>
+        <h1 className="game__message">{message}</h1>
+
+        <input
+          className="game__input"
+          value={id}
+          placeholder="Enter your name"
+          onChange={handleIdChange}
+        />
+
+        <section className="settings">
+          <label>
+            <input
+              type="radio"
+              value="true"
+              checked={unique === 'true'}
+              onChange={handleUniqueStatus}
+            />
+            Unique
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="false"
+              checked={unique === 'false'}
+              onChange={handleUniqueStatus}
+            />
+            Not Unique
+          </label>
+        </section>
+
+        <p className="game__word-length">Word Length:</p>
+        <input
+          type="number"
+          className="game__input"
+          value={wordLength}
+          min={3}
+          max={10}
+          onChange={handleWordLength}
+        />
+
+        <button className="game__button start-button" onClick={startGame}>
+          Start Game
+        </button>
+      </div>
+
+      <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
+        <p className="game__time">Time: {time}</p>
+        <p className="game__guessed-word">The guessed word is: {input.toUpperCase()}</p>
+
+        <input
+          className="game__input guess-input"
+          type="text"
+          value={input}
+          onChange={handleInputWord}
+          maxLength={gameData?.length || wordLength}
+        />
+
+        <button className="game__button guess-button" onClick={sendWord}>
+          Guess!
+        </button>
+
+        <div className="result-container">{printChars()}</div>
+      </div>
     </div>
   );
 };

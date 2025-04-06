@@ -29,24 +29,99 @@ body {
 /* Game */
 .game__container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #333;
+}
+
+.game__top {
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  .game__container__word {
-    color: white;
-    font-size: 2em;
-  }
+.game__message {
+  color: white;
+  font-size: 2rem;
+}
 
-  .game__container__input {
-    min-width: 200px;
-    min-height: 30px;
-  }
+.game__time {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.game__input {
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #444;
+  color: white;
+}
+
+.settings {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.settings label {
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+.game__word-length {
+  color: white;
+}
+
+.game__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.game__button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00D8FF;
+  color: #242424;
+  cursor: pointer;
+}
+
+.game__button:hover {
+  background-color: #61dafbaa;
+}
+
+.start-button {
+  background-color: #00D8FF;
+}
+
+.guess-button {
+  background-color: #00D8FF;
+}
+
+.game__guessed-word {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 10px;
 }
 
 .result-container {
   display: flex;
   gap: 8px;
+  margin-top: 10px;
 }
 
 .result-item {
@@ -54,6 +129,10 @@ body {
   border-radius: 4px;
   font-weight: bold;
   color: #fff;
+}
+
+.hidden {
+  display: none;
 }
 
 .correct {
@@ -67,7 +146,6 @@ body {
 .incorrect {
   background-color: gray;
 }
-
 
 /* Keyframes */
 @keyframes logo-spin {

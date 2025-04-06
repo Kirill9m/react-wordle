@@ -9,6 +9,7 @@ const WordleGame = () => {
   const [time, setTime] = useState('');
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState();
+  const [message, setMessage] = useState('Choose settings and click Start game!');
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -58,27 +59,61 @@ const WordleGame = () => {
     }
   };
 
+  const printChars = () => {
+    if (!guessResponse?.result){
+      return null;
+    }else if (guessResponse.result === true){
+      return (
+        <span>{`Right word was ${guessResponse.stone}, you won!`}</span>
+      );
+    }else {
+      return guessResponse.result.map((item, index) => (
+        <span
+          key={index}
+          className={`result-item ${
+            item.result === 'correct'
+              ? 'correct'
+              : item.result === 'present'
+                ? 'present'
+                : 'incorrect'
+          }`}
+        >
+          {item.letter.toUpperCase()}
+        </span>
+      ));
+    }
+    return null;
+  };
+
   useEffect(() => {
-    if (!gameData || !gameData.gameStarted) return;
+    if (guessResponse?.result === true) {
+      setMessage(`Right word was ${guessResponse.guess}, you won!`);
+    }
+  }, [guessResponse]);
+
+  useEffect(() => {
+    if (!gameData || !gameData.gameStarted || guessResponse?.result === true) return;
 
     const [hours, minutes, seconds] = gameData.gameStarted.split(':').map(Number);
     const [hours2, minutes2, seconds2] = currentTime().split(':').map(Number);
 
-    const timeInSec = (hours2 * 3600 + minutes2 * 60 + seconds2) - (hours * 3600 + minutes * 60 + seconds)
+    const timeInSec =
+      hours2 * 3600 + minutes2 * 60 + seconds2 - (hours * 3600 + minutes * 60 + seconds);
     const intervalId = setInterval(() => {
       setTime(timeInSec);
     }, 1000);
 
     return () => {
       clearInterval(intervalId);
-    }
+    };
   });
-// console.log(gameData.length)
+  // console.log(gameData.length)
 
   return (
     <div className="game__container">
-      <p>{time}</p>
-      <input value={id} placeholder="Id/Name" onChange={handleIdChange} />
+      <h1>{message}</h1>
+      <p>Time: {time}</p>
+      <input value={id} placeholder="Name" onChange={handleIdChange} />
       <section>
         <label>
           <input
@@ -102,8 +137,7 @@ const WordleGame = () => {
       <p>Word length:</p>
       <input type="number" value={wordLength} onChange={handleWordLength} />
       <button onClick={startGame}>Start game!</button>
-
-      <p className="game__container__word">The guessed word is: {input}</p>
+      <p className="game__container__word">The guessed word is: {input.toUpperCase()}</p>
       <input
         className="game__container__input"
         type="text"
@@ -112,6 +146,7 @@ const WordleGame = () => {
         maxLength={gameData?.length || wordLength}
       />
       <button onClick={sendWord}>Guess!</button>
+      <div className="result-container">{printChars()}</div>
     </div>
   );
 };

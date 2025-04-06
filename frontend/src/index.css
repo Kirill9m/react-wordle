@@ -44,6 +44,29 @@ body {
   }
 }
 
+.result-container {
+  display: flex;
+  gap: 8px;
+}
+
+.result-item {
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.correct {
+  background-color: green;
+}
+
+.present {
+  background-color: orange;
+}
+
+.incorrect {
+  background-color: gray;
+}
 
 
 /* Keyframes */

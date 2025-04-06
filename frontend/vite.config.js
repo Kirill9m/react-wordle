@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/game': 'http://localhost:5080'  
+      '/api': 'http://localhost:5080'  
     }
   }
 });

@@ -28,6 +28,12 @@ app.get('/highscore', async(req, res) => {
   res.send(html);
 });
 
+app.get('/about', async(req, res) => {
+  const buf = await fs.readFile('./static/about.html')
+  const html = buf.toString();
+  res.send(html);
+});
+
 app.get('/api/highscore', async (req, res) => {
   await mongoose.connect(process.env.MONGO);
 

@@ -120,31 +120,37 @@ body {
 
 .result-container {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
 }
 
 .result-item {
-  padding: 8px;
+  font-size: 15px;
+  padding: 12px;
+  margin: 2px;
   border-radius: 4px;
   font-weight: bold;
   color: #fff;
+  min-height: 1.5rem;
+  min-width: 1.5rem;
+
+  .correct {
+    background-color: green;
+  }
+  
+  .present {
+    background-color: orange;
+  }
+  
+  .incorrect {
+    background-color: gray;
+  }
 }
 
 .hidden {
   display: none;
-}
-
-.correct {
-  background-color: green;
-}
-
-.present {
-  background-color: orange;
-}
-
-.incorrect {
-  background-color: gray;
 }
 
 /* Keyframes */

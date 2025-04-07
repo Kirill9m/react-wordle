@@ -11,6 +11,7 @@ const WordleGame = () => {
   const [guessResponse, setGuessResponse] = useState();
   const [message, setMessage] = useState('Choose settings and click Start game!');
   const [timerRunning, setTimerRunning] = useState(false);
+  const [guessHistory, setGuessHistory] = useState([]);
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -40,6 +41,7 @@ const WordleGame = () => {
       const data = await response.json();
       setGuessResponse(data);
       setInput('');
+      setGuessHistory((prevHistory) => [...prevHistory, data]);
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -57,6 +59,7 @@ const WordleGame = () => {
       const data = await response.json();
       setGameData(data);
       setTimerRunning(true);
+      setGuessHistory([]);
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -69,26 +72,28 @@ const WordleGame = () => {
   }, [gameData]);
 
   const printChars = () => {
-    if (!guessResponse?.result) {
-      return null;
-    } else if (guessResponse.result === true) {
-    } else {
-      return guessResponse.result.map((item, index) => (
-        <span
-          key={index}
-          className={`result-item ${
-            item.result === 'correct'
-              ? 'correct'
-              : item.result === 'present'
-                ? 'present'
-                : 'incorrect'
-          }`}
-        >
-          {item.letter.toUpperCase()}
-        </span>
-      ));
-    }
-    return null;
+    return guessHistory.map((item, index) => (
+      <div key={index} className="result-item">
+        {item.result === true ? (
+          <span className="correct">{item.guess.toUpperCase()}</span>
+        ) : (
+          item.result.map((resultItem, idx) => (
+            <span
+              key={idx}
+              className={`result-item ${
+                resultItem.result === 'correct'
+                  ? 'correct'
+                  : resultItem.result === 'present'
+                  ? 'present'
+                  : 'incorrect'
+              }`}
+            >
+              {resultItem.letter.toUpperCase()}
+            </span>
+          ))
+        )}
+      </div>
+    ));
   };
 
   useEffect(() => {

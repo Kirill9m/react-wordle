@@ -1,6 +1,8 @@
 import express from 'express'
 import fs from 'fs/promises'
 import gameRoutes from './routes/game.js'
+import mongoose from 'mongoose';
+import HighScore from './src/models.js';
 
 const app = express();
 
@@ -24,6 +26,13 @@ app.get('/highscore', async(req, res) => {
   const buf = await fs.readFile('./static/highscore.html')
   const html = buf.toString();
   res.send(html);
+});
+
+app.get('/api/highscore', async (req, res) => {
+  await mongoose.connect(process.env.MONGO);
+
+  const highscores = await HighScore.find();
+  res.json(highscores);
 });
 
 app.use('/assets', express.static('../frontend/dist/assets'));

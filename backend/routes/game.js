@@ -25,6 +25,8 @@ router.post("/start", (req, res) => {
       word: chooseWord(wordList, length, unique),
       gameStarted: time,
       isUnique: unique,
+      wordLength: length,
+      attemps: 0
     };
     console.log( games[playerId] );
     res.json({ status: `Game for playerId ${playerId} is started`, length,  gameStarted: time});
@@ -48,17 +50,25 @@ router.post("/guess", async (req, res) => {
   const timeStarted = currentGame.gameStarted;
   const gameUnique = currentGame.isUnique;
   const result = checkWord(guess, currentGame.word, playerId,);
+  currentGame.attemps++;
+  
 
   if (result === true) {
     delete games[playerId];
     console.log(`Game for player: ${playerId} ended ${timeNow} and was removed.`);
 
+    const [hours, minutes, seconds] = timeStarted.split(':').map(Number);
+    const [hours2, minutes2, seconds2] = timeNow.split(':').map(Number);
+
+    const timeInSec =
+      hours2 * 3600 + minutes2 * 60 + seconds2 - (hours * 3600 + minutes * 60 + seconds);
+
     const newHighScore = new HighScore({
-      user: 'test',
-      time: 21,
-      attemps: 1,
-      length: 5,
-      uniqe: true
+      user: playerId,
+      time: timeInSec,
+      attemps: currentGame.attemps,
+      length: currentGame.wordLength,
+      unique: currentGame.isUnique
     });
 
     await newHighScore.save();

@@ -6,11 +6,19 @@ body {
 }
 
 .btn {
-  margin: 1rem;
   padding: 10px 20px;
   background-color: hsl(200, 70%, 50%);
   color: white;
   text-decoration: none;
   border-radius: 5px;
   font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.about__container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  list-style: none;
 }

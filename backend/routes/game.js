@@ -3,6 +3,8 @@ import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { wordList } from "../logic/words.js";
 import { currentTime } from "../logic/currentTime.js";
+import mongoose from "mongoose";
+import HighScore from "../src/models.js";
 
 const router = express.Router();
 const games = []; //MongoDB
@@ -31,7 +33,9 @@ router.post("/start", (req, res) => {
   }
 });
 
-router.post("/guess", (req, res) => {
+router.post("/guess", async (req, res) => {
+  await mongoose.connect(process.env.MONGO);
+
   const playerId = req.body.playerId;
   const guess = req.body.guess;
 
@@ -48,6 +52,16 @@ router.post("/guess", (req, res) => {
   if (result === true) {
     delete games[playerId];
     console.log(`Game for player: ${playerId} ended ${timeNow} and was removed.`);
+
+    const newHighScore = new HighScore({
+      user: 'test',
+      time: 21,
+      attemps: 1,
+      length: 5,
+      uniqe: true
+    });
+
+    await newHighScore.save();
   }
 
   res.json({ result, guess, timeNow, timeStarted, gameUnique });

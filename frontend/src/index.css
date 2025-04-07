@@ -26,6 +26,16 @@ body {
   }
 }
 
+.navbar {
+  color: white;
+  margin-left: 1rem;
+
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
 /* Game */
 .game__container {
   display: flex;

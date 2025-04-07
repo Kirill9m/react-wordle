@@ -4,3 +4,13 @@ body {
   background-color: #242424;
   color: white;
 }
+
+.btn {
+  margin: 1rem;
+  padding: 10px 20px;
+  background-color: hsl(200, 70%, 50%);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}

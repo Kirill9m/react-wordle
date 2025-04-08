@@ -16,8 +16,19 @@ body {
   text-align: center;
 }
 
-.about__container {
+.top1 {
+  background-color: hsla(51, 100%, 50%, 0.5);
+  font-weight: bold;
+}
 
+.top2 {
+  background-color: hsla(0, 0%, 75%, 0.5);
+  font-weight: bold;
+}
+
+.top3 {
+  background-color: hsla(30, 61%, 50%, 0.5);
+  font-weight: bold;
 }
 
 .container {

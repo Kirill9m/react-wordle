@@ -12,7 +12,7 @@ const WordleGame = () => {
   const [message, setMessage] = useState('Choose settings and click Start game!');
   const [timerRunning, setTimerRunning] = useState(false);
   const [guessHistory, setGuessHistory] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -105,7 +105,7 @@ const WordleGame = () => {
     if (guessResponse?.result === true) {
       setTimerRunning(false);
       setMessage(
-        `You won! The ${id} guessed the ${guessResponse.guess} correctly. Time is ${time} seconds.`
+        `Congratulations ${id}! The correct word is: ${guessResponse.guess}. Your score(${guessResponse.score}) has been sent to the highscore.`
       );
     }
   }, [guessResponse]);

@@ -44,7 +44,7 @@ router.post("/guess", async (req, res) => {
 
   const playerId = req.body.playerId;
   const guess = req.body.guess;
-  const saveHighscore = req.body.highscore 
+  const saveHighscore = req.body.highscore;
 
   if (!playerId || !games[playerId]) {
     return res.status(400).json({ error: "Game is found" });
@@ -56,6 +56,7 @@ router.post("/guess", async (req, res) => {
   const gameUnique = currentGame.isUnique;
   const result = checkWord(guess, currentGame.word, playerId);
   currentGame.attemps++;
+  let score = 0;
 
   if (result === true) {
     delete games[playerId];
@@ -72,6 +73,12 @@ router.post("/guess", async (req, res) => {
       seconds2 -
       (hours * 3600 + minutes * 60 + seconds);
 
+    score =
+      currentGame.wordLength * 100 +
+      (currentGame.isUnique ? 200 : 0) -
+      timeInSec * 2 -
+      currentGame.attemps * 10;
+
     if (saveHighscore) {
       const newHighScore = new HighScore({
         user: playerId,
@@ -79,12 +86,13 @@ router.post("/guess", async (req, res) => {
         attemps: currentGame.attemps,
         length: currentGame.wordLength,
         unique: currentGame.isUnique,
+        score,
       });
       await newHighScore.save();
     }
   }
 
-  res.json({ result, guess, timeNow, timeStarted, gameUnique });
+  res.json({ result, guess, timeNow, timeStarted, gameUnique, score });
 });
 
 export default router;

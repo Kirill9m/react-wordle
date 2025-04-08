@@ -46,7 +46,10 @@ const WordleGame = () => {
       const data = await response.json();
       setGuessResponse(data);
       setInput('');
-      setGuessHistory((prevHistory) => [...prevHistory, data]);
+      setGuessHistory((prevHistory) => {
+        const updatedHistory = [...prevHistory, data];
+        return updatedHistory.length > 5 ? updatedHistory.slice(updatedHistory.length - 5) : updatedHistory;
+      });
     } catch (error) {
       console.error('Error sending data:', error);
     }

@@ -12,6 +12,7 @@ const WordleGame = () => {
   const [message, setMessage] = useState('Choose settings and click Start game!');
   const [timerRunning, setTimerRunning] = useState(false);
   const [guessHistory, setGuessHistory] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -29,6 +30,10 @@ const WordleGame = () => {
     setId(() => e.target.value);
   };
 
+  const handleChange = () => {
+    setIsChecked(!isChecked);
+  };
+
   const sendWord = async () => {
     try {
       const response = await fetch('/api/game/guess', {
@@ -36,7 +41,7 @@ const WordleGame = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ playerId: id, guess: input }),
+        body: JSON.stringify({ playerId: id, guess: input, highscore: isChecked }),
       });
       const data = await response.json();
       setGuessResponse(data);
@@ -84,8 +89,8 @@ const WordleGame = () => {
                 resultItem.result === 'correct'
                   ? 'correct'
                   : resultItem.result === 'present'
-                  ? 'present'
-                  : 'incorrect'
+                    ? 'present'
+                    : 'incorrect'
               }`}
             >
               {resultItem.letter.toUpperCase()}
@@ -172,6 +177,11 @@ const WordleGame = () => {
       </div>
 
       <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
+        <label className="game__highscore">
+          I want to be part of the highscore list:
+          <input type="checkbox" checked={isChecked} onChange={handleChange} />
+        </label>
+
         <p className="game__time">Time: {time}</p>
         <p className="game__guessed-word">The guessed word is: {input.toUpperCase()}</p>
 

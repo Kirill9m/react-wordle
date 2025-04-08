@@ -133,6 +133,12 @@ body {
   margin-top: 10px;
 }
 
+.game__highscore {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
 .result-container {
   display: flex;
   flex-direction: column;

@@ -21,15 +21,19 @@ router.post("/start", (req, res) => {
 
   try {
     games[playerId] = {
-      id:  playerId,
+      id: playerId,
       word: chooseWord(wordList, length, unique),
       gameStarted: time,
       isUnique: unique,
       wordLength: length,
-      attemps: 0
+      attemps: 0,
     };
-    console.log( games[playerId] );
-    res.json({ status: `Game for playerId ${playerId} is started`, length,  gameStarted: time});
+    console.log(games[playerId]);
+    res.json({
+      status: `Game for playerId ${playerId} is started`,
+      length,
+      gameStarted: time,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -40,6 +44,7 @@ router.post("/guess", async (req, res) => {
 
   const playerId = req.body.playerId;
   const guess = req.body.guess;
+  const saveHighscore = req.body.highscore 
 
   if (!playerId || !games[playerId]) {
     return res.status(400).json({ error: "Game is found" });
@@ -49,29 +54,34 @@ router.post("/guess", async (req, res) => {
   const timeNow = currentTime();
   const timeStarted = currentGame.gameStarted;
   const gameUnique = currentGame.isUnique;
-  const result = checkWord(guess, currentGame.word, playerId,);
+  const result = checkWord(guess, currentGame.word, playerId);
   currentGame.attemps++;
-  
 
   if (result === true) {
     delete games[playerId];
-    console.log(`Game for player: ${playerId} ended ${timeNow} and was removed.`);
+    console.log(
+      `Game for player: ${playerId} ended ${timeNow} and was removed.`
+    );
 
-    const [hours, minutes, seconds] = timeStarted.split(':').map(Number);
-    const [hours2, minutes2, seconds2] = timeNow.split(':').map(Number);
+    const [hours, minutes, seconds] = timeStarted.split(":").map(Number);
+    const [hours2, minutes2, seconds2] = timeNow.split(":").map(Number);
 
     const timeInSec =
-      hours2 * 3600 + minutes2 * 60 + seconds2 - (hours * 3600 + minutes * 60 + seconds);
+      hours2 * 3600 +
+      minutes2 * 60 +
+      seconds2 -
+      (hours * 3600 + minutes * 60 + seconds);
 
-    const newHighScore = new HighScore({
-      user: playerId,
-      time: timeInSec,
-      attemps: currentGame.attemps,
-      length: currentGame.wordLength,
-      unique: currentGame.isUnique
-    });
-
-    await newHighScore.save();
+    if (saveHighscore) {
+      const newHighScore = new HighScore({
+        user: playerId,
+        time: timeInSec,
+        attemps: currentGame.attemps,
+        length: currentGame.wordLength,
+        unique: currentGame.isUnique,
+      });
+      await newHighScore.save();
+    }
   }
 
   res.json({ result, guess, timeNow, timeStarted, gameUnique });

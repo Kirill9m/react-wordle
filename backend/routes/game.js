@@ -45,19 +45,18 @@ router.post("/:id/guesses", async (req, res) => {
   if (game) {
     const guess = req.body.guess;
     game.guesses.push(guess);
+
     console.log(guess);
+
     const result = checkWord(guess, game.word);
-    let score;
+    let score = 0;
+    game.attemps++;
     
-    if (!result) {
-      const time = (game.gameStarted - new Date()) / 1000;
+    if (result === true) {
+      const time = Math.round((new Date() - game.gameStarted) / 1000);
 
       await mongoose.connect(process.env.MONGO);
-      score =
-        game.length * 100 +
-        (game.isUnique ? 200 : 0) -
-        time * 2 -
-        game.attemps * 10;
+      score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.attemps * 10;
 
       const newHighScore = new HighScore({
         user: game.id,

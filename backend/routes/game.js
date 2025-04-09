@@ -2,97 +2,83 @@ import express from "express";
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { wordList } from "../logic/words.js";
-import { currentTime } from "../logic/currentTime.js";
 import mongoose from "mongoose";
 import HighScore from "../src/models.js";
+import * as uuid from "uuid";
 
 const router = express.Router();
-const games = []; //MongoDB
+const GAMES = []; //MongoDB
 
-router.post("/start", (req, res) => {
-  const playerId = req.body.playerId; //Req from DB in future
+router.post("/", (req, res) => {
+  const playerId = req.body.playerId;
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
-  const time = currentTime();
 
-  if (!playerId) {
-    return res.status(400).json({ error: "Player ID is required." });
+  console.log(unique);
+
+  if (!playerId || !length) {
+    return res.status(400).json({ error: "Player data is required." });
   }
 
-  try {
-    games[playerId] = {
-      id: playerId,
-      word: chooseWord(wordList, length, unique),
-      gameStarted: time,
-      isUnique: unique,
-      wordLength: length,
-      attemps: 0,
-    };
-    console.log(games[playerId]);
-    res.json({
-      status: `Game for playerId ${playerId} is started`,
-      length,
-      gameStarted: time,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  const game = {
+    gameId: uuid.v4(),
+    id: playerId,
+    word: chooseWord(wordList, length, unique),
+    gameStarted: new Date(),
+    isUnique: unique,
+    wordLength: length,
+    attemps: 0,
+    guesses: [],
+  };
+  GAMES.push(game);
+  console.log(game);
+  res.json({
+    status: `Game for playerId ${game.id} is started`,
+    length: game.length,
+    gameStarted: game.gameStarted,
+    gameId: game.gameId,
+  });
 });
 
-router.post("/guess", async (req, res) => {
-  await mongoose.connect(process.env.MONGO);
+router.post("/:id/guesses", async (req, res) => {
+  const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
+  if (game) {
+    const guess = req.body.guess;
+    game.guesses.push(guess);
+    console.log(guess);
+    const result = checkWord(guess, game.word);
+    let score;
+    
+    if (!result) {
+      const time = (game.gameStarted - new Date()) / 1000;
 
-  const playerId = req.body.playerId;
-  const guess = req.body.guess;
-  const saveHighscore = req.body.highscore;
+      await mongoose.connect(process.env.MONGO);
+      score =
+        game.length * 100 +
+        (game.isUnique ? 200 : 0) -
+        time * 2 -
+        game.attemps * 10;
 
-  if (!playerId || !games[playerId]) {
-    return res.status(400).json({ error: "Game is found" });
-  }
-
-  const currentGame = games[playerId];
-  const timeNow = currentTime();
-  const timeStarted = currentGame.gameStarted;
-  const gameUnique = currentGame.isUnique;
-  const result = checkWord(guess, currentGame.word, playerId);
-  currentGame.attemps++;
-  let score = 0;
-
-  if (result === true) {
-    delete games[playerId];
-    console.log(
-      `Game for player: ${playerId} ended ${timeNow} and was removed.`
-    );
-
-    const [hours, minutes, seconds] = timeStarted.split(":").map(Number);
-    const [hours2, minutes2, seconds2] = timeNow.split(":").map(Number);
-
-    const timeInSec =
-      hours2 * 3600 +
-      minutes2 * 60 +
-      seconds2 -
-      (hours * 3600 + minutes * 60 + seconds);
-
-    score =
-      currentGame.wordLength * 100 +
-      (currentGame.isUnique ? 200 : 0) -
-      timeInSec * 2 -
-      currentGame.attemps * 10;
-
-    if (saveHighscore) {
       const newHighScore = new HighScore({
-        user: playerId,
-        time: timeInSec,
-        attemps: currentGame.attemps,
-        length: currentGame.wordLength,
-        unique: currentGame.isUnique,
+        user: game.id,
+        time: time,
+        attemps: game.attemps,
+        length: game.wordLength,
+        unique: game.isUnique,
         score,
       });
       await newHighScore.save();
     }
-  }
+    const response = { result, guess, timeStarted: game.timeStarted, guesses: game.guesses };
 
-  res.json({ result, guess, timeNow, timeStarted, gameUnique, score });
+    if (score !== null && score !== undefined) {
+      response.score = score;
+    }
+
+    res.json(response);
+  } else {
+    res.status(404).end("Game not found");
+  }
 });
 
 export default router;

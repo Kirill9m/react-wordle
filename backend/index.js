@@ -3,7 +3,9 @@ import fs from 'fs/promises'
 import gameRoutes from './routes/game.js'
 import mongoose from 'mongoose';
 import HighScore from './src/models.js';
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -13,7 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/game", gameRoutes);
+app.use("/api/games", gameRoutes);
 
 
 app.get('/', async(req, res) => {

@@ -27,7 +27,6 @@ router.post("/", (req, res) => {
     gameStarted: new Date(),
     isUnique: unique,
     wordLength: length,
-    attemps: 0,
     guesses: [],
   };
   GAMES.push(game);
@@ -44,37 +43,30 @@ router.post("/:id/guesses", async (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
   if (game) {
     const guess = req.body.guess;
+    const saveHighscore = req.body.highscore === true || req.body.highscore === 'true';
     game.guesses.push(guess);
 
-    console.log(guess);
+    console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
     const result = checkWord(guess, game.word);
-    let score = 0;
-    game.attemps++;
-    
-    if (result === true) {
-      const time = Math.round((new Date() - game.gameStarted) / 1000);
 
+    let time = Math.round((new Date() - game.gameStarted) / 1000);
+    let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
+    
+    if (!result || saveHighscore === true) {
       await mongoose.connect(process.env.MONGO);
-      score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.attemps * 10;
 
       const newHighScore = new HighScore({
         user: game.id,
         time: time,
-        attemps: game.attemps,
+        attemps: game.guesses.length,
         length: game.wordLength,
         unique: game.isUnique,
         score,
       });
       await newHighScore.save();
     }
-    const response = { result, guess, timeStarted: game.timeStarted, guesses: game.guesses };
-
-    if (score !== null && score !== undefined) {
-      response.score = score;
-    }
-
-    res.json(response);
+    res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score })
   } else {
     res.status(404).end("Game not found");
   }

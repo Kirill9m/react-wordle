@@ -119,8 +119,7 @@ const WordleGame = () => {
   useEffect(() => {
     if (!gameData || !gameData.gameStarted || !timerRunning) return;
 
-    const time = Math.round((new Date() - gameData.gameStarted) / 1000);
-
+    let time = Math.round((new Date() - new Date(gameData.gameStarted)) / 1000);
     const intervalId = setInterval(() => {
       setTime(time);
     }, 1000);
@@ -128,7 +127,7 @@ const WordleGame = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [gameData, timerRunning]);
+  });
 
   return (
     <div className="game__container">

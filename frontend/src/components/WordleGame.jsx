@@ -36,7 +36,7 @@ const WordleGame = () => {
 
   const sendWord = async () => {
     try {
-      const response = await fetch('/api/game/guess', {
+      const response = await fetch(`/api/games/${gameData.gameId}/guesses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,9 @@ const WordleGame = () => {
       setInput('');
       setGuessHistory((prevHistory) => {
         const updatedHistory = [...prevHistory, data];
-        return updatedHistory.length > 5 ? updatedHistory.slice(updatedHistory.length - 5) : updatedHistory;
+        return updatedHistory.length > 5
+          ? updatedHistory.slice(updatedHistory.length - 5)
+          : updatedHistory;
       });
     } catch (error) {
       console.error('Error sending data:', error);
@@ -57,7 +59,7 @@ const WordleGame = () => {
 
   const startGame = async () => {
     try {
-      const response = await fetch('/api/game/start', {
+      const response = await fetch('/api/games', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,6 +68,7 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGameData(data);
+      console.log(gameData);
       setTimerRunning(true);
       setGuessHistory([]);
     } catch (error) {
@@ -91,8 +94,8 @@ const WordleGame = () => {
               className={`result-item ${
                 resultItem.result === 'correct'
                   ? 'correct'
-                  : resultItem.result === 'present'
-                    ? 'present'
+                  : resultItem.result === 'misplaced'
+                    ? 'misplaced'
                     : 'incorrect'
               }`}
             >
@@ -116,20 +119,16 @@ const WordleGame = () => {
   useEffect(() => {
     if (!gameData || !gameData.gameStarted || !timerRunning) return;
 
-    const [hours, minutes, seconds] = gameData.gameStarted.split(':').map(Number);
-    const [hours2, minutes2, seconds2] = currentTime().split(':').map(Number);
-
-    const timeInSec =
-      hours2 * 3600 + minutes2 * 60 + seconds2 - (hours * 3600 + minutes * 60 + seconds);
+    const time = Math.round((new Date() - gameData.gameStarted) / 1000);
 
     const intervalId = setInterval(() => {
-      setTime(timeInSec);
+      setTime(time);
     }, 1000);
 
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, [gameData, timerRunning]);
 
   return (
     <div className="game__container">

@@ -77,7 +77,10 @@ const WordleGame = () => {
 
   useEffect(() => {
     if (guessResponse?.error) {
-      setMessage(guessResponse.status);
+      setMessage(guessResponse.status)
+      setTimeout(() => {
+        setMessage(gameData?.status);
+      }, 5000)
     }
   }, [guessResponse]);
 

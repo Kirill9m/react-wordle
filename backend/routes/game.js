@@ -41,7 +41,7 @@ router.post("/", (req, res) => {
   GAMES.push(game);
   console.log(game);
   res.json({
-    status: `Game for player: ${game.id} is started`,
+    status: `${game.id}, your word consists of ${length} characters.`,
     length: game.length,
     gameStarted: game.gameStarted,
     gameId: game.gameId,

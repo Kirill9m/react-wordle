@@ -1,11 +1,10 @@
-const GamePlay = ({ isChecked, handleChange, time, input, setInput, wordLength, sendWord, printChars }) => {
+const GamePlay = ({ isChecked, handleChange, input, setInput, wordLength, sendWord, printChars }) => {
   return(<div className='game__bottom'>
         <label className="game__highscore">
           I want to be part of the highscore list:
           <input type="checkbox" checked={isChecked} onChange={handleChange} />
         </label>
-
-        <p className="game__time">Time: {time}</p>
+        
         <p className="game__guessed-word">The guessed word is: {input.toUpperCase()}</p>
 
         <input

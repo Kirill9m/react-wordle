@@ -3,13 +3,13 @@ import { currentTime } from '../../../backend/logic/currentTime';
 import GameStart from './GameStart';
 import GamePlay from './GamePlay';
 import GameResults from './GameResults';
+import Timer from './Timer';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
   const [id, setId] = useState('');
   const [unique, setUnique] = useState(false);
   const [wordLength, setWordLength] = useState(5);
-  const [time, setTime] = useState('');
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
   const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
@@ -125,19 +125,6 @@ const WordleGame = () => {
     }
   }, [guessResponse]);
 
-  useEffect(() => {
-    if (!gameData || !gameData.gameStarted || !timerRunning) return;
-
-    let time = Math.round((new Date() - new Date(gameData.gameStarted)) / 1000);
-    const intervalId = setInterval(() => {
-      setTime(time);
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  });
-
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
@@ -157,10 +144,10 @@ const WordleGame = () => {
       )}
       {timerRunning && (
         <>
+        <Timer gameData={gameData} timerRunning={timerRunning}/>
         <GamePlay 
         isChecked={isChecked}
         handleChange={handleChange}
-        time={time}
         input={input}
         setInput={setInput}
         wordLength={wordLength}

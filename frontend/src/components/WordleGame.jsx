@@ -59,6 +59,7 @@ const WordleGame = () => {
 
   const startGame = async () => {
     try {
+      setMessage('Starting game...')
       const response = await fetch('/api/games', {
         method: 'POST',
         headers: {

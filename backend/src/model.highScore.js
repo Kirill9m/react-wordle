@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const highscoreSchema = new mongoose.Schema({
+const highScoreSchema = new mongoose.Schema({
   user: String,
   time: Number,
   attemps: Number,
@@ -9,6 +9,6 @@ const highscoreSchema = new mongoose.Schema({
   score: Number,
 });
 
-const HighScore = mongoose.model('score', highscoreSchema);
+const HighScore = mongoose.model('score', highScoreSchema);
 
 export default HighScore;

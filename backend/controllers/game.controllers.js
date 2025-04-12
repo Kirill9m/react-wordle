@@ -2,7 +2,7 @@ import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
 import mongoose from "mongoose";
-import HighScore from "../src/models.js";
+import HighScore from "../src/model.highScore.js";
 import * as uuid from "uuid";
 
 const GAMES = [];

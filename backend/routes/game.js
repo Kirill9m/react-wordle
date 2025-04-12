@@ -72,7 +72,7 @@ router.post("/:id/guesses", async (req, res) => {
     let time = Math.round((new Date() - game.gameStarted) / 1000);
     let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
     
-    if (!result || saveHighscore === true) {
+    if (result === true && saveHighscore === true) {
       await mongoose.connect(process.env.MONGO);
 
       const newHighScore = new HighScore({

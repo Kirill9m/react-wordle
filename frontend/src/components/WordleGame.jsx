@@ -9,7 +9,7 @@ const WordleGame = () => {
   const [time, setTime] = useState('');
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
-  const [message, setMessage] = useState('Choose settings and click Start game!');
+  const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
 
@@ -40,7 +40,7 @@ const WordleGame = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ playerId: id, guess: input, highscore: isChecked }),
+        body: JSON.stringify({ guess: input, highscore: isChecked }),
       });
       const data = await response.json();
       setGuessResponse(data);
@@ -61,7 +61,7 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGameData(data);
-      if (!data.error) {
+      if (!data.msg) {
         setTimerRunning(true);
       }
     } catch (error) {
@@ -76,7 +76,7 @@ const WordleGame = () => {
   }, [gameData]);
 
   useEffect(() => {
-    if (guessResponse?.error) {
+    if (guessResponse?.msg) {
       setMessage(guessResponse.status)
       setTimeout(() => {
         setMessage(gameData?.status);
@@ -112,10 +112,8 @@ const WordleGame = () => {
 
   useEffect(() => {
     if (guessResponse?.result === true) {
+      setMessage(guessResponse.status);
       setTimerRunning(false);
-      setMessage(
-        `Congratulations ${id}! The correct word is: ${guessResponse.guess}. Your score(${guessResponse.score}) has been sent to the highscore.`
-      );
     }
   }, [guessResponse]);
 

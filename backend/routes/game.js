@@ -17,14 +17,14 @@ router.post("/", (req, res) => {
   console.log(unique);
 
   if (!playerId || !length) {
-    return res.status(400).json({ error: "Player data is required.", status: "Player data is required"});
+    return res.status(400).json({ msg: "Player data is required.", status: "Player data is required"});
   }
 
   const chosenWord = chooseWord(wordList, length, unique);
 
   if (chosenWord === false) {
     return res.status(400).json({
-      error: "Word not found",
+      msg: "Word not found",
       status: `Sorry, a word with length ${length} was not found in our database!`,
     });
   }
@@ -58,7 +58,7 @@ router.post("/:id/guesses", async (req, res) => {
 
     if (typeof guess !== "string" || guess.length !== game.wordLength) {
       return res.status(400).json({
-        error: "Invalid guess",
+        msg: "Invalid guess",
         status: `The word should be ${game.wordLength} characters long!`,
       });
     }
@@ -68,6 +68,7 @@ router.post("/:id/guesses", async (req, res) => {
     console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
     const result = checkWord(guess, game.word);
+    let status = 'In progress';
 
     let time = Math.round((new Date() - game.gameStarted) / 1000);
     let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
@@ -84,8 +85,11 @@ router.post("/:id/guesses", async (req, res) => {
         score,
       });
       await newHighScore.save();
+      status = `Gratz! Your score is ${score}, and it will be saved to the highscore!` 
+    } else if(result === true && saveHighscore === false){
+      status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!` 
     }
-    res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score })
+    res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score, status: status })
 });
 
 export default router;

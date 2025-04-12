@@ -5,17 +5,18 @@ const GameResults = ({ guessResponse }) => {
 
   useEffect(() => {
     if (guessResponse.result && Array.isArray(guessResponse.result)) {
-      setPrevResult((prevResult) => [
-        ...prevResult,
-        guessResponse.result,
-      ])
-    }
+      setPrevResult((prevResult) => {
+      const newResult = [ guessResponse.result, ...prevResult];
+      
+      return newResult.slice(0, 5);
+    });
+  }
   }, [guessResponse]);
+
+  console.log(prevResult);
 
   const printChars = (result) => {
     if (!Array.isArray(result)) return null;
-
-    console.log(result);
 
     return (
       <div className="result-item">

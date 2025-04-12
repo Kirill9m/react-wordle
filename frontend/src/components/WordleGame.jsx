@@ -8,10 +8,9 @@ const WordleGame = () => {
   const [wordLength, setWordLength] = useState(5);
   const [time, setTime] = useState('');
   const [gameData, setGameData] = useState(null);
-  const [guessResponse, setGuessResponse] = useState();
+  const [guessResponse, setGuessResponse] = useState({});
   const [message, setMessage] = useState('Choose settings and click Start game!');
   const [timerRunning, setTimerRunning] = useState(false);
-  const [guessHistory, setGuessHistory] = useState([]);
   const [isChecked, setIsChecked] = useState(true);
 
   const handleInputWord = (e) => {
@@ -46,12 +45,6 @@ const WordleGame = () => {
       const data = await response.json();
       setGuessResponse(data);
       setInput('');
-      setGuessHistory((prevHistory) => {
-        const updatedHistory = [...prevHistory, data];
-        return updatedHistory.length > 5
-          ? updatedHistory.slice(updatedHistory.length - 5)
-          : updatedHistory;
-      });
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -68,10 +61,9 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGameData(data);
-      if(!data.error){
-      setTimerRunning(true);
+      if (!data.error) {
+        setTimerRunning(true);
       }
-      setGuessHistory([]);
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -79,33 +71,40 @@ const WordleGame = () => {
 
   useEffect(() => {
     if (gameData) {
-      setMessage(gameData.status);
+      setMessage(gameData?.status);
     }
   }, [gameData]);
 
+  useEffect(() => {
+    if (guessResponse?.error) {
+      setMessage(guessResponse.status);
+    }
+  }, [guessResponse]);
+
   const printChars = () => {
-    return guessHistory.map((item, index) => (
-      <div key={index} className="result-item">
-        {item.result === true ? (
-          <span className="correct">{item.guess.toUpperCase()}</span>
-        ) : (
-          item.result.map((resultItem, idx) => (
-            <span
-              key={idx}
-              className={`result-item ${
-                resultItem.result === 'correct'
-                  ? 'correct'
-                  : resultItem.result === 'misplaced'
-                    ? 'misplaced'
-                    : 'incorrect'
-              }`}
-            >
-              {resultItem.letter.toUpperCase()}
+    if (guessResponse.result === true) return null;
+    if (!Array.isArray(guessResponse.result)) return null;
+
+    return (
+      <div className="result-item">
+        {guessResponse.result.map((item, index) => {
+          let className = 'result-item';
+          if (item.result === 'incorrect') {
+            className += ' incorrect';
+          } else if (item.result === 'correct') {
+            className += ' correct';
+          } else if (item.result === 'misplaced') {
+            className += ' misplaced';
+          }
+
+          return (
+            <span key={index} className={className}>
+              {item.letter.toUpperCase()}
             </span>
-          ))
-        )}
+          );
+        })}
       </div>
-    ));
+    );
   };
 
   useEffect(() => {

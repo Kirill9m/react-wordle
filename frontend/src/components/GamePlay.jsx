@@ -1,4 +1,4 @@
-const GamePlay = ({ isChecked, handleChange, input, setInput, wordLength, sendWord, printChars }) => {
+const GamePlay = ({ isChecked, handleChange, input, setInput, wordLength, sendWord }) => {
   return(<div className='game__bottom'>
         <label className="game__highscore">
           I want to be part of the highscore list:

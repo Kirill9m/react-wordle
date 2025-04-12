@@ -40,8 +40,8 @@ const WordleGame = () => {
       }
 
       setInput('');
-    } catch (error) {
-      console.error('Error sending data:', error);
+    } catch {
+      setMessage('Error connecting to the server or game is not found')
     }
   };
 
@@ -60,8 +60,8 @@ const WordleGame = () => {
       if (!data.msg) {
         setTimerRunning(true);
       }
-    } catch (error) {
-      console.error('Error sending data:', error);
+    } catch {
+      setMessage('Error connecting to the server or game is not found')
     }
   };
 

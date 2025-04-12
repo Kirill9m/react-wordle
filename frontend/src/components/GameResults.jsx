@@ -1,12 +1,27 @@
+import { useEffect, useState } from "react";
+
 const GameResults = ({ guessResponse }) => {
-  const printChars = () => {
-    if (guessResponse.result === true) return null;
-    if (!Array.isArray(guessResponse.result)) return null;
+  const [prevResult, setPrevResult] = useState([]);
+
+  useEffect(() => {
+    if (guessResponse.result && Array.isArray(guessResponse.result)) {
+      setPrevResult((prevResult) => [
+        ...prevResult,
+        guessResponse.result,
+      ])
+    }
+  }, [guessResponse]);
+
+  const printChars = (result) => {
+    if (!Array.isArray(result)) return null;
+
+    console.log(result);
 
     return (
       <div className="result-item">
-        {guessResponse.result.map((item, index) => {
+        {result.map((item, index) => {
           let className = 'result-item';
+
           if (item.result === 'incorrect') {
             className += ' incorrect';
           } else if (item.result === 'correct') {
@@ -25,7 +40,15 @@ const GameResults = ({ guessResponse }) => {
     );
   };
 
-  return <div className="result-container">{printChars()}</div>
+  return (
+    <div className="result-container">
+      {prevResult.map((result, index) => (
+        <div key={index}>
+          {printChars(result)}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default GameResults;

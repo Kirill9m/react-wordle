@@ -1,4 +1,3 @@
-import express from "express";
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
@@ -6,10 +5,9 @@ import mongoose from "mongoose";
 import HighScore from "../src/models.js";
 import * as uuid from "uuid";
 
-const router = express.Router();
-const GAMES = []; //MongoDB
+const GAMES = [];
 
-router.post("/", (req, res) => {
+const startGame = async (req, res) => {
   const playerId = req.body.playerId;
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
@@ -58,9 +56,9 @@ router.post("/", (req, res) => {
     gameId: game.gameId,
     language: game.language
   });
-});
+};
 
-router.post("/:id/guesses", async (req, res) => {
+const makeGuess = async (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
   if (!game) {
     res.status(404).end("Game not found");
@@ -102,6 +100,6 @@ router.post("/:id/guesses", async (req, res) => {
       status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!` 
     }
     res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score, status: status })
-});
+};
 
-export default router;
+export { startGame, makeGuess };

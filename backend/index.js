@@ -1,11 +1,11 @@
 import express from 'express'
 import fs from 'fs/promises'
-import gameRoutes from './routes/game.js'
-import mongoose from 'mongoose';
-import HighScore from './src/models.js';
 import dotenv from "dotenv";
+import gameRouter from './routes/game.router.js';
+import highScoreRouter from './routes/highscore.router.js'
 
 dotenv.config();
+
 const app = express();
 
 app.use(express.json());
@@ -15,7 +15,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/games", gameRoutes);
+app.use("/api/games", gameRouter);
+app.use("/api/highscore", highScoreRouter);
 
 
 app.get('/', async(req, res) => {
@@ -34,13 +35,6 @@ app.get('/about', async(req, res) => {
   const buf = await fs.readFile('./static/about.html')
   const html = buf.toString();
   res.send(html);
-});
-
-app.get('/api/highscore', async (req, res) => {
-  await mongoose.connect(process.env.MONGO);
-
-  const highscores = await HighScore.find();
-  res.json(highscores);
 });
 
 app.use('/assets', express.static('../frontend/dist/assets'));

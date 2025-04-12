@@ -41,7 +41,7 @@ router.post("/", (req, res) => {
   GAMES.push(game);
   console.log(game);
   res.json({
-    status: `${game.id}, your word consists of ${length} characters.`,
+    status: `Player ${game.id}, your word is ${length} characters long.`,
     length: game.length,
     gameStarted: game.gameStarted,
     gameId: game.gameId,
@@ -68,7 +68,7 @@ router.post("/:id/guesses", async (req, res) => {
     console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
     const result = checkWord(guess, game.word);
-    let status = 'In progress';
+    let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;
 
     let time = Math.round((new Date() - game.gameStarted) / 1000);
     let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;

@@ -14,7 +14,7 @@ const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, st
             type="radio"
             value="true"
             checked={unique === 'true'}
-            onChange={handleUniqueStatus}
+            onChange={(e) => setUnique(e.target.value)}
           />
           Unique
         </label>

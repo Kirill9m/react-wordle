@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { currentTime } from '../../../backend/logic/currentTime';
+import GameStart from './GameStart';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -17,24 +18,13 @@ const WordleGame = () => {
     setInput(() => e.target.value);
   };
 
-  const handleUniqueStatus = (e) => {
-    setUnique(() => e.target.value);
-  };
-
-  const handleWordLength = (e) => {
-    setWordLength(() => e.target.value);
-  };
-
-  const handleIdChange = (e) => {
-    setId(() => e.target.value);
-  };
-
   const handleChange = () => {
     setIsChecked(!isChecked);
   };
 
   const sendWord = async () => {
     try {
+      setMessage('Checking word...')
       const response = await fetch(`/api/games/${gameData.gameId}/guesses`, {
         method: 'POST',
         headers: {
@@ -44,6 +34,13 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGuessResponse(data);
+      
+      if (data?.status){
+        setMessage(data.status);
+      }else{
+        setMessage('Something went wrong!')
+      }
+
       setInput('');
     } catch (error) {
       console.error('Error sending data:', error);
@@ -77,13 +74,6 @@ const WordleGame = () => {
     }
   };
 
-  const handleStartGameKeyDown = (keyCode) => {
-    if (keyCode.key === 'Enter') {
-      keyCode.preventDefault();
-      startGame();
-    }
-  };
-
   useEffect(() => {
     if (gameData) {
       setMessage(gameData?.status);
@@ -97,7 +87,7 @@ const WordleGame = () => {
         setMessage(gameData?.status);
       }, 5000)
     }
-  }, [guessResponse]);
+  }, [guessResponse, gameData]);
 
   const printChars = () => {
     if (guessResponse.result === true) return null;
@@ -149,7 +139,17 @@ const WordleGame = () => {
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
 
-
+      {!timerRunning && (
+        <GameStart 
+        id={id}
+        setId={setId}
+        unique={unique}
+        setUnique={setUnique}
+        wordLength={wordLength}
+        setWordLength={setWordLength}
+        startGame={startGame}
+        />
+      )}
       <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
         <label className="game__highscore">
           I want to be part of the highscore list:

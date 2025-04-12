@@ -99,7 +99,7 @@ const makeGuess = async (req, res) => {
     } else if(result === true && saveHighscore === false){
       status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!` 
     }
-    res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score, status: status })
+    res.json({ result, guess, timeStarted: game.gameStarted, guesses: game.guesses, score, status: status })
 };
 
 export { startGame, makeGuess };

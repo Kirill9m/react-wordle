@@ -3,6 +3,6 @@ import { getHighscore } from "../controllers/highscore.controller.js";
 
 const router = express.Router();
 
-router.post("/", getHighscore);
+router.get("/", getHighscore);
 
 export default router;

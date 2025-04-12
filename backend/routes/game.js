@@ -17,7 +17,7 @@ router.post("/", (req, res) => {
   console.log(unique);
 
   if (!playerId || !length) {
-    return res.status(400).json({ error: "Player data is required." });
+    return res.status(400).json({ error: "Player data is required.", status: "Player data is required"});
   }
 
   const game = {
@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
   GAMES.push(game);
   console.log(game);
   res.json({
-    status: `Game for playerId ${game.id} is started`,
+    status: `Game for player: ${game.id} is started`,
     length: game.length,
     gameStarted: game.gameStarted,
     gameId: game.gameId,
@@ -41,9 +41,19 @@ router.post("/", (req, res) => {
 
 router.post("/:id/guesses", async (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
-  if (game) {
+  if (!game) {
+    res.status(404).end("Game not found");
+  }
     const guess = req.body.guess;
     const saveHighscore = req.body.highscore === true || req.body.highscore === 'true';
+
+    if (typeof guess !== "string" || guess.length !== game.wordLength) {
+      return res.status(400).json({
+        error: "Invalid guess",
+        status: `The word should be ${game.wordLength} characters long!`,
+      });
+    }
+    
     game.guesses.push(guess);
 
     console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
@@ -67,9 +77,6 @@ router.post("/:id/guesses", async (req, res) => {
       await newHighScore.save();
     }
     res.json({ result, guess, timeStarted: game.timeStarted, guesses: game.guesses, score })
-  } else {
-    res.status(404).end("Game not found");
-  }
 });
 
 export default router;

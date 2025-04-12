@@ -68,8 +68,9 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGameData(data);
-      console.log(gameData);
+      if(!data.error){
       setTimerRunning(true);
+      }
       setGuessHistory([]);
     } catch (error) {
       console.error('Error sending data:', error);
@@ -131,9 +132,8 @@ const WordleGame = () => {
 
   return (
     <div className="game__container">
+      <h1 className="game__message">{message}</h1>
       <div className={`game__top ${timerRunning ? 'hidden' : ''}`}>
-        <h1 className="game__message">{message}</h1>
-
         <input
           className="game__input"
           value={id}

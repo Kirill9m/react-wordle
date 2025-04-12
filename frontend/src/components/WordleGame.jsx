@@ -1,33 +1,20 @@
 import { useState, useEffect } from 'react';
-import { currentTime } from '../../../backend/logic/currentTime';
+import GameStart from './GameStart';
+import GamePlay from './GamePlay';
+import GameResults from './GameResults';
+import Timer from './Timer';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
   const [id, setId] = useState('');
   const [unique, setUnique] = useState(false);
   const [wordLength, setWordLength] = useState(5);
-  const [time, setTime] = useState('');
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
   const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
-
-  const handleInputWord = (e) => {
-    setInput(() => e.target.value);
-  };
-
-  const handleUniqueStatus = (e) => {
-    setUnique(() => e.target.value);
-  };
-
-  const handleWordLength = (e) => {
-    setWordLength(() => e.target.value);
-  };
-
-  const handleIdChange = (e) => {
-    setId(() => e.target.value);
-  };
+  const [lang, setLang] = useState(null);
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -35,6 +22,7 @@ const WordleGame = () => {
 
   const sendWord = async () => {
     try {
+      setMessage('Checking word...')
       const response = await fetch(`/api/games/${gameData.gameId}/guesses`, {
         method: 'POST',
         headers: {
@@ -44,27 +32,28 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGuessResponse(data);
+      
+      if (data?.status){
+        setMessage(data.status);
+      }else{
+        setMessage('Something went wrong!')
+      }
+
       setInput('');
     } catch (error) {
       console.error('Error sending data:', error);
     }
   };
 
-  const handleSendWordKeyDown = (keyCode) => {
-    if (keyCode.key === 'Enter') {
-      keyCode.preventDefault();
-      sendWord();
-    }
-  };
-
   const startGame = async () => {
     try {
+      setMessage('Starting game...')
       const response = await fetch('/api/games', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique }),
+        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique, lang:lang }),
       });
       const data = await response.json();
       setGameData(data);
@@ -73,13 +62,6 @@ const WordleGame = () => {
       }
     } catch (error) {
       console.error('Error sending data:', error);
-    }
-  };
-
-  const handleStartGameKeyDown = (keyCode) => {
-    if (keyCode.key === 'Enter') {
-      keyCode.preventDefault();
-      startGame();
     }
   };
 
@@ -96,7 +78,7 @@ const WordleGame = () => {
         setMessage(gameData?.status);
       }, 5000)
     }
-  }, [guessResponse]);
+  }, [guessResponse, gameData]);
 
   const printChars = () => {
     if (guessResponse.result === true) return null;
@@ -131,91 +113,38 @@ const WordleGame = () => {
     }
   }, [guessResponse]);
 
-  useEffect(() => {
-    if (!gameData || !gameData.gameStarted || !timerRunning) return;
-
-    let time = Math.round((new Date() - new Date(gameData.gameStarted)) / 1000);
-    const intervalId = setInterval(() => {
-      setTime(time);
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  });
-
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
-      <div className={`game__top ${timerRunning ? 'hidden' : ''}`}>
-        <input
-          className="game__input"
-          value={id}
-          placeholder="Enter your name"
-          onChange={handleIdChange}
+
+      {!timerRunning && (
+        <GameStart 
+        id={id}
+        setId={setId}
+        unique={unique}
+        setUnique={setUnique}
+        wordLength={wordLength}
+        setWordLength={setWordLength}
+        startGame={startGame}
+        lang={lang}
+        setLang={setLang}
         />
-
-        <section className="settings">
-          <label>
-            <input
-              type="radio"
-              value="true"
-              checked={unique === 'true'}
-              onChange={handleUniqueStatus}
-            />
-            Unique
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="false"
-              checked={unique === 'false'}
-              onChange={handleUniqueStatus}
-            />
-            Not Unique
-          </label>
-        </section>
-
-        <p className="game__word-length">Word Length:</p>
-        <input
-          type="number"
-          className="game__input"
-          value={wordLength}
-          min={3}
-          max={10}
-          onKeyDown={handleStartGameKeyDown}
-          onChange={handleWordLength}
+      )}
+      {timerRunning && (
+        <>
+        <Timer gameData={gameData} timerRunning={timerRunning}/>
+        <GamePlay 
+        isChecked={isChecked}
+        handleChange={handleChange}
+        input={input}
+        setInput={setInput}
+        wordLength={wordLength}
+        sendWord={sendWord}
+        printChars={printChars}
         />
-
-        <button className="game__button start-button" onClick={startGame}>
-          Start Game
-        </button>
-      </div>
-
-      <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
-        <label className="game__highscore">
-          I want to be part of the highscore list:
-          <input type="checkbox" checked={isChecked} onChange={handleChange} />
-        </label>
-
-        <p className="game__time">Time: {time}</p>
-        <p className="game__guessed-word">The guessed word is: {input.toUpperCase()}</p>
-
-        <input
-          className="game__input guess-input"
-          type="text"
-          value={input}
-          onChange={handleInputWord}
-          onKeyDown={handleSendWordKeyDown}
-          maxLength={gameData?.length || wordLength}
-        />
-
-        <button className="game__button guess-button" onClick={sendWord}>
-          Guess!
-        </button>
-
-        <div className="result-container">{printChars()}</div>
-      </div>
+        <GameResults guessResponse={guessResponse}/>
+        </>
+      )}
     </div>
   );
 };

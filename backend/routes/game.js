@@ -1,7 +1,7 @@
 import express from "express";
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
-import { wordList } from "../logic/words.js";
+import { english, swedish, russian } from "../logic/words.js";
 import mongoose from "mongoose";
 import HighScore from "../src/models.js";
 import * as uuid from "uuid";
@@ -13,14 +13,24 @@ router.post("/", (req, res) => {
   const playerId = req.body.playerId;
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
-
-  console.log(unique);
+  const lang = req.body.lang;
 
   if (!playerId || !length) {
     return res.status(400).json({ msg: "Player data is required.", status: "Player data is required"});
   }
 
-  const chosenWord = chooseWord(wordList, length, unique);
+  const chooseLang = (lang) => {
+    if(lang == 'swedish'){
+      return swedish;
+    }else if(lang == 'russian'){
+      return russian;
+    }else{
+      return english;
+    }
+  }
+
+  const chosenWord = chooseWord(chooseLang(lang), length, unique);
+  
 
   if (chosenWord === false) {
     return res.status(400).json({
@@ -37,14 +47,16 @@ router.post("/", (req, res) => {
     isUnique: unique,
     wordLength: length,
     guesses: [],
+    language: lang
   };
   GAMES.push(game);
   console.log(game);
   res.json({
-    status: `${game.id}, your word consists of ${length} characters.`,
+    status: `Player ${game.id}, your word is ${length} characters long.`,
     length: game.length,
     gameStarted: game.gameStarted,
     gameId: game.gameId,
+    language: game.language
   });
 });
 
@@ -68,7 +80,7 @@ router.post("/:id/guesses", async (req, res) => {
     console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
     const result = checkWord(guess, game.word);
-    let status = 'In progress';
+    let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;
 
     let time = Math.round((new Date() - game.gameStarted) / 1000);
     let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;

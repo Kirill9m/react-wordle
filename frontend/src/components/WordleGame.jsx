@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { currentTime } from '../../../backend/logic/currentTime';
 import GameStart from './GameStart';
+import GamePlay from './GamePlay';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -153,30 +154,18 @@ const WordleGame = () => {
         setLang={setLang}
         />
       )}
-      <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
-        <label className="game__highscore">
-          I want to be part of the highscore list:
-          <input type="checkbox" checked={isChecked} onChange={handleChange} />
-        </label>
-
-        <p className="game__time">Time: {time}</p>
-        <p className="game__guessed-word">The guessed word is: {input.toUpperCase()}</p>
-
-        <input
-          className="game__input guess-input"
-          type="text"
-          value={input}
-          onChange={handleInputWord}
-          onKeyDown={handleSendWordKeyDown}
-          maxLength={gameData?.length || wordLength}
+      {timerRunning && (
+        <GamePlay 
+        isChecked={isChecked}
+        handleChange={handleChange}
+        time={time}
+        input={input}
+        setInput={setInput}
+        wordLength={wordLength}
+        sendWord={sendWord}
+        printChars={printChars}
         />
-
-        <button className="game__button guess-button" onClick={sendWord}>
-          Guess!
-        </button>
-
-        <div className="result-container">{printChars()}</div>
-      </div>
+      )}
     </div>
   );
 };

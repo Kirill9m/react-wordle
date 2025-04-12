@@ -19,8 +19,6 @@ const GamePlay = ({ isChecked, handleChange, time, input, setInput, wordLength, 
         <button className="game__button guess-button" onClick={sendWord}>
           Guess!
         </button>
-
-        <div className="result-container">{printChars()}</div>
       </div>
 )}
 

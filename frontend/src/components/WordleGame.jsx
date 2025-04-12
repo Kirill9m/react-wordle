@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { currentTime } from '../../../backend/logic/currentTime';
 import GameStart from './GameStart';
 import GamePlay from './GamePlay';
+import GameResults from './GameResults';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -155,6 +156,7 @@ const WordleGame = () => {
         />
       )}
       {timerRunning && (
+        <>
         <GamePlay 
         isChecked={isChecked}
         handleChange={handleChange}
@@ -165,6 +167,8 @@ const WordleGame = () => {
         sendWord={sendWord}
         printChars={printChars}
         />
+        <GameResults guessResponse={guessResponse}/>
+        </>
       )}
     </div>
   );

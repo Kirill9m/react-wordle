@@ -1,7 +1,7 @@
 import express from "express";
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
-import { wordList } from "../logic/words.js";
+import { english, swedish, russian } from "../logic/words.js";
 import mongoose from "mongoose";
 import HighScore from "../src/models.js";
 import * as uuid from "uuid";
@@ -13,14 +13,24 @@ router.post("/", (req, res) => {
   const playerId = req.body.playerId;
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
-
-  console.log(unique);
+  const lang = req.body.lang;
 
   if (!playerId || !length) {
     return res.status(400).json({ msg: "Player data is required.", status: "Player data is required"});
   }
 
-  const chosenWord = chooseWord(wordList, length, unique);
+  const chooseLang = (lang) => {
+    if(lang == 'swedish'){
+      return swedish;
+    }else if(lang == 'russian'){
+      return russian;
+    }else{
+      return english;
+    }
+  }
+
+  const chosenWord = chooseWord(chooseLang(lang), length, unique);
+  
 
   if (chosenWord === false) {
     return res.status(400).json({
@@ -37,6 +47,7 @@ router.post("/", (req, res) => {
     isUnique: unique,
     wordLength: length,
     guesses: [],
+    language: lang
   };
   GAMES.push(game);
   console.log(game);
@@ -45,6 +56,7 @@ router.post("/", (req, res) => {
     length: game.length,
     gameStarted: game.gameStarted,
     gameId: game.gameId,
+    language: game.language
   });
 });
 

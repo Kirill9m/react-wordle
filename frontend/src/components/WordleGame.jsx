@@ -13,6 +13,7 @@ const WordleGame = () => {
   const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
+  const [lang, setLang] = useState(null);
 
   const handleInputWord = (e) => {
     setInput(() => e.target.value);
@@ -62,7 +63,7 @@ const WordleGame = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique }),
+        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique, lang:lang }),
       });
       const data = await response.json();
       setGameData(data);
@@ -148,6 +149,8 @@ const WordleGame = () => {
         wordLength={wordLength}
         setWordLength={setWordLength}
         startGame={startGame}
+        lang={lang}
+        setLang={setLang}
         />
       )}
       <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>

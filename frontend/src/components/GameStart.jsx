@@ -1,4 +1,4 @@
-const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, startGame }) => {
+const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang }) => {
   return (
     <div className='game__top'>
       <input
@@ -28,6 +28,13 @@ const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, st
           Not Unique
         </label>
       </section>
+    
+      <select value={lang} onChange={(e) => setLang(e.target.value)}>
+        <option value="">Select an option</option>
+        <option value="english">English</option>
+        <option value="swedish">Swedish</option>
+        <option value="russian">Russian</option>
+      </select>
 
       <p className="game__word-length">Word Length:</p>
       <input

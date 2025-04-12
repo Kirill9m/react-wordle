@@ -148,50 +148,7 @@ const WordleGame = () => {
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
-      <div className={`game__top ${timerRunning ? 'hidden' : ''}`}>
-        <input
-          className="game__input"
-          value={id}
-          placeholder="Enter your name"
-          onChange={handleIdChange}
-        />
 
-        <section className="settings">
-          <label>
-            <input
-              type="radio"
-              value="true"
-              checked={unique === 'true'}
-              onChange={handleUniqueStatus}
-            />
-            Unique
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="false"
-              checked={unique === 'false'}
-              onChange={handleUniqueStatus}
-            />
-            Not Unique
-          </label>
-        </section>
-
-        <p className="game__word-length">Word Length:</p>
-        <input
-          type="number"
-          className="game__input"
-          value={wordLength}
-          min={3}
-          max={10}
-          onKeyDown={handleStartGameKeyDown}
-          onChange={handleWordLength}
-        />
-
-        <button className="game__button start-button" onClick={startGame}>
-          Start Game
-        </button>
-      </div>
 
       <div className={`game__bottom ${!timerRunning ? 'hidden' : ''}`}>
         <label className="game__highscore">

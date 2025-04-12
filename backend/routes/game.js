@@ -20,10 +20,19 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "Player data is required.", status: "Player data is required"});
   }
 
+  const chosenWord = chooseWord(wordList, length, unique);
+
+  if (chosenWord === false) {
+    return res.status(400).json({
+      error: "Word not found",
+      status: `Sorry, a word with length ${length} was not found in our database!`,
+    });
+  }
+
   const game = {
     gameId: uuid.v4(),
     id: playerId,
-    word: chooseWord(wordList, length, unique),
+    word: chosenWord,
     gameStarted: new Date(),
     isUnique: unique,
     wordLength: length,

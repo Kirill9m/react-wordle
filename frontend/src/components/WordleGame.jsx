@@ -50,6 +50,13 @@ const WordleGame = () => {
     }
   };
 
+  const handleSendWordKeyDown = (keyCode) => {
+    if (keyCode.key === 'Enter') {
+      keyCode.preventDefault();
+      sendWord();
+    }
+  };
+
   const startGame = async () => {
     try {
       const response = await fetch('/api/games', {
@@ -66,6 +73,13 @@ const WordleGame = () => {
       }
     } catch (error) {
       console.error('Error sending data:', error);
+    }
+  };
+
+  const handleStartGameKeyDown = (keyCode) => {
+    if (keyCode.key === 'Enter') {
+      keyCode.preventDefault();
+      startGame();
     }
   };
 
@@ -169,6 +183,7 @@ const WordleGame = () => {
           value={wordLength}
           min={3}
           max={10}
+          onKeyDown={handleStartGameKeyDown}
           onChange={handleWordLength}
         />
 
@@ -191,6 +206,7 @@ const WordleGame = () => {
           type="text"
           value={input}
           onChange={handleInputWord}
+          onKeyDown={handleSendWordKeyDown}
           maxLength={gameData?.length || wordLength}
         />
 

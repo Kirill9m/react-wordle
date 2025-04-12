@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { currentTime } from '../../../backend/logic/currentTime';
 import GameStart from './GameStart';
 import GamePlay from './GamePlay';
 import GameResults from './GameResults';
@@ -16,10 +15,6 @@ const WordleGame = () => {
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [lang, setLang] = useState(null);
-
-  const handleInputWord = (e) => {
-    setInput(() => e.target.value);
-  };
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -47,13 +42,6 @@ const WordleGame = () => {
       setInput('');
     } catch (error) {
       console.error('Error sending data:', error);
-    }
-  };
-
-  const handleSendWordKeyDown = (keyCode) => {
-    if (keyCode.key === 'Enter') {
-      keyCode.preventDefault();
-      sendWord();
     }
   };
 

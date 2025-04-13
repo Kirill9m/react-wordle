@@ -1,20 +1,19 @@
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
-import mongoose from "mongoose";
 import HighScore from "../src/model.highScore.js";
 import * as uuid from "uuid";
 
 const GAMES = [];
 
 const startGame = async (req, res) => {
-  const playerId = req.body.playerId;
+  const playerId = req.user?.name || req.body?.playerId;
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
   const lang = req.body.lang;
 
   if (!playerId || !length) {
-    return res.status(400).json({ msg: "Player data is required.", status: "Player data is required"});
+    return res.status(400).json({ msg: "Player data is required.", status: "Player data or login is required"});
   }
 
   const chooseLang = (lang) => {
@@ -84,7 +83,6 @@ const makeGuess = async (req, res) => {
     let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
     
     if (result === true && saveHighscore === true) {
-      await mongoose.connect(process.env.MONGO);
 
       const newHighScore = new HighScore({
         user: game.id,

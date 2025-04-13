@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../src/model.user.js'
-import mongoose from 'mongoose';
 
 const login = async (req, res) => {
   try {
@@ -9,7 +8,6 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
     }
-    await mongoose.connect(process.env.MONGO);
     const user = await User.findOne({ email });
 
     const isPasswordValid = user && (await bcrypt.compare(password, user.password));
@@ -36,7 +34,6 @@ const register = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
-    await mongoose.connect(process.env.MONGO);
     const registeredUser = await User.findOne({ email });
 
     if (registeredUser) {

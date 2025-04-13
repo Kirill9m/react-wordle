@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import Header from './components/Header';
 import WordleGame from './components/WordleGame';
-import Login from './components/Login';
 
 function App() {
   
@@ -13,7 +12,6 @@ function App() {
   return (
     <div>
         <Header/>
-        <Login/>
         <WordleGame/>
     </div>
   );

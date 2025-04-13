@@ -11,18 +11,17 @@ const auth = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        await mongoose.connect(process.env.MONGO);
         const user = await User.findById(decoded.id).select('-password');
 
         if (!user) {
             return res.status(401).json({ message: 'Not authorized - Invalid token' });
         }
-
+        
         req.user = user;
         next();
 
     } catch (error) {
-        res.status(401).json({ message: 'Not authorized' });
+        return res.status(400).json({ msg: "Player data is required.", status: "You are not authorized"});
     };
 };
 

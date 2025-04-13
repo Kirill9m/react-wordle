@@ -3,6 +3,7 @@ import GameStart from './GameStart';
 import GamePlay from './GamePlay';
 import GameResults from './GameResults';
 import Timer from './Timer';
+import Login from './Login';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -11,10 +12,12 @@ const WordleGame = () => {
   const [wordLength, setWordLength] = useState(5);
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
-  const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
+  const [message, setMessage] = useState("Auth or play as guest!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [lang, setLang] = useState(undefined);
+  const [playAsGuest, setPlayAsGuest] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -32,10 +35,10 @@ const WordleGame = () => {
       });
       const data = await response.json();
       setGuessResponse(data);
-      
-      if (data?.status){
+
+      if (data?.status) {
         setMessage(data.status);
-      }else{
+      } else {
         setMessage('Something went wrong!')
       }
 
@@ -47,13 +50,15 @@ const WordleGame = () => {
 
   const startGame = async () => {
     try {
+      const token = localStorage.getItem('token');
       setMessage('Starting game...')
       const response = await fetch('/api/games', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique, lang:lang }),
+        body: JSON.stringify({ playerId: id, length: wordLength, unique: unique, lang: lang }),
       });
       const data = await response.json();
       setGameData(data);
@@ -116,33 +121,33 @@ const WordleGame = () => {
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
-
-      {!timerRunning && (
-        <GameStart 
-        id={id}
-        setId={setId}
-        unique={unique}
-        setUnique={setUnique}
-        wordLength={wordLength}
-        setWordLength={setWordLength}
-        startGame={startGame}
-        lang={lang}
-        setLang={setLang}
+      {playAsGuest && (<Login setPlayAsGuest={setPlayAsGuest} setMessage={setMessage}/>)}
+      {!playAsGuest && !timerRunning && (
+        <GameStart
+          id={id}
+          setId={setId}
+          unique={unique}
+          setUnique={setUnique}
+          wordLength={wordLength}
+          setWordLength={setWordLength}
+          startGame={startGame}
+          lang={lang}
+          setLang={setLang}
         />
       )}
-      {timerRunning && (
+      {!playAsGuest && timerRunning && (
         <>
-        <Timer gameData={gameData} timerRunning={timerRunning}/>
-        <GamePlay 
-        isChecked={isChecked}
-        handleChange={handleChange}
-        input={input}
-        setInput={setInput}
-        wordLength={wordLength}
-        sendWord={sendWord}
-        printChars={printChars}
-        />
-        <GameResults guessResponse={guessResponse}/>
+          <Timer gameData={gameData} timerRunning={timerRunning} />
+          <GamePlay
+            isChecked={isChecked}
+            handleChange={handleChange}
+            input={input}
+            setInput={setInput}
+            wordLength={wordLength}
+            sendWord={sendWord}
+            printChars={printChars}
+          />
+          <GameResults guessResponse={guessResponse} />
         </>
       )}
     </div>

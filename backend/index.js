@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import gameRouter from './routes/game.router.js';
 import highScoreRouter from './routes/highscore.router.js'
 import usersRouter from './routes/users.router.js';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+await mongoose.connect(process.env.MONGO);
 
 app.use((req, res, next) => {
   console.log(req.method, req.url);

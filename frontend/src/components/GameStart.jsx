@@ -1,12 +1,12 @@
 const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang }) => {
   return (
     <div className='game__top'>
-      <input
+      {/* <input
         className="game__input"
         value={id}
         placeholder="Enter your name"
         onChange={(e) => setId(e.target.value)}
-      />
+      /> */}
 
       <section className="settings">
         <label>

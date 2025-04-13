@@ -115,6 +115,11 @@ body {
   cursor: pointer;
 }
 
+.game__text {
+  padding-top: 10px;
+  color: white;
+}
+
 .game__button:hover {
   background-color: #61dafbaa;
 }

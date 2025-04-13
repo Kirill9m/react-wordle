@@ -9,9 +9,8 @@ const CoinInfo = ({ isLoggedIn, timerRunning, gameData, setMessage, message }) =
     const checkCoins = async () => {
       const token = localStorage.getItem('token');
       const response = await fetch("/api/users/current", {
-        method: "POST",
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
       });

@@ -95,9 +95,8 @@ const WordleGame = () => {
   
       if (token) {
         const response = await fetch('/api/users/current', {
-          method: 'POST',
+          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
@@ -105,7 +104,6 @@ const WordleGame = () => {
         const data = await response.json();
   
         if (response.ok) {
-          console.log("You are logged in", data);
           setIsLoggedIn(true);
           setMessage(`Welcome ${data.name} Good luck!`)
           setUserStatement('readyToPlay')
@@ -152,7 +150,6 @@ const WordleGame = () => {
       setTimerRunning(false);
     }
   }, [guessResponse]);
-  console.log(playAsGuest, userStatement, timerRunning, isLoggedIn)
   return (
     <>
     <div className="game__container">

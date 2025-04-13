@@ -8,6 +8,17 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required', status: "Email and password are required" });
     }
+
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if(validateEmail){
+      return res.status(400).json({ message: 'Invalid email format', status: 'Invalid email format' })
+    }
+
+    if (password.length < 5) {
+      return res.status(400).json({ message: 'Password to short', status: 'Password must be at least 5 characters long' })
+    }
+
     const user = await User.findOne({ email });
 
     const isPasswordValid = user && (await bcrypt.compare(password, user.password));
@@ -34,6 +45,21 @@ const register = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required', status: "Name, email and password are required" });
     }
+
+    if (password.length < 5) {
+      return res.status(400).json({ message: 'Password to short', status: 'Password must be at least 5 characters long' })
+    }
+
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if(!validateEmail(email)){
+      return res.status(400).json({ message: 'Invalid email format', status: 'Invalid email format' })
+    }
+
+    if (name.length < 3) {
+      return res.status(400).json({ message: 'Username to short', status: 'Username should contain at least 3 characters' })
+    }
+
     const registeredUserEmail = await User.findOne({ email });
     const registeredUserName = await User.findOne({ name });
 

@@ -17,7 +17,6 @@ const Login = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
       const data = await response.json();
       if (data.token) {
         localStorage.setItem('token', data.token);
-        console.log(data);
         setUserStatement('readyToPlay')
       } else {
         setMessage(data.status);

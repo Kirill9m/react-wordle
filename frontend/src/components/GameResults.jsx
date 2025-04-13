@@ -13,8 +13,6 @@ const GameResults = ({ guessResponse }) => {
   }
   }, [guessResponse]);
 
-  console.log(prevResult);
-
   const printChars = (result) => {
     if (!Array.isArray(result)) return null;
 

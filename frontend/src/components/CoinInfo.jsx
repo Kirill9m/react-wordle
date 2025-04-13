@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import classes from './CoinInfo.module.css'
 
-const CoinInfo = ({ isLoggedIn, timerRunning }) => {
+const CoinInfo = ({ isLoggedIn, timerRunning, gameData, setMessage, message }) => {
   const [coins, setCoins] = useState(null);
 
 
@@ -19,7 +19,7 @@ const CoinInfo = ({ isLoggedIn, timerRunning }) => {
       setCoins(data.coins);
     };
     checkCoins();
-  }, []);
+  }, [message]);
 
   const getHint = async () => {
     try {
@@ -29,18 +29,14 @@ const CoinInfo = ({ isLoggedIn, timerRunning }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ guess: input, highscore: isChecked }),
       });
       const data = await response.json();
-      setGuessResponse(data);
 
       if (data?.status) {
         setMessage(data.status);
       } else {
         setMessage('Something went wrong!')
       }
-
-      setInput('');
     } catch {
       setMessage('Error connecting to the server or game is not found')
     }
@@ -48,13 +44,16 @@ const CoinInfo = ({ isLoggedIn, timerRunning }) => {
 
   return (
     (isLoggedIn && timerRunning ) ? (
+      <>
+      <span className="coins">You have: {coins} coins</span>
       <div className={classes.button}>
-        <button name="checkbox" type="button"></button>
+        <button name="checkbox" type="button" onClick={getHint}></button>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
       </div>
+      </>
     ) : null
   );
 }

@@ -201,6 +201,11 @@ body {
   }
 }
 
+.coins{
+  color: white;
+  margin-bottom: 10px;
+}
+
 /* Keyframes */
 @keyframes logo-spin {
   from {

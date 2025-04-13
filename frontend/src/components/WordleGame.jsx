@@ -157,7 +157,7 @@ const WordleGame = () => {
   return (
     <>
     <div className="game__container">
-    <CoinInfo isLoggedIn={isLoggedIn} timerRunning={timerRunning} gameData={gameData} setMessage={setMessage}/>
+    <CoinInfo isLoggedIn={isLoggedIn} timerRunning={timerRunning} gameData={gameData} setMessage={setMessage} message={message}/>
       <h1 className="game__message">{message}</h1>
       {((!playAsGuest) && (userStatement === 'notReadyToPlay') && (!timerRunning)) && (<Login setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}
       {((!playAsGuest) && (userStatement === 'register') && (!timerRunning)) && (<Register setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}

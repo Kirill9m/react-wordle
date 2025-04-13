@@ -176,6 +176,10 @@ const WordleGame = () => {
           lang={lang}
           setLang={setLang}
           isLoggedIn={isLoggedIn}
+          setPlayAsGuest={setPlayAsGuest}
+          setMessage={setMessage}
+          setUserStatement={setUserStatement}
+          setIsLoggedIn={setIsLoggedIn}
         />
       )}
       {timerRunning && (

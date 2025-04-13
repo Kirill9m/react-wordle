@@ -1,4 +1,4 @@
-const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang }) => {
+const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang, setPlayAsGuest, setMessage, setUserStatement, setIsLoggedIn }) => {
 
   return (
     <div className='game__top'>
@@ -31,7 +31,7 @@ const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWor
       </section>
 
       <select value={lang} onChange={(e) => setLang(e.target.value)}>
-        <option value="">Select an option</option>
+        <option value="">Select an language</option>
         <option value="english">English</option>
         <option value="swedish">Swedish</option>
         <option value="russian">Russian</option>
@@ -50,8 +50,13 @@ const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWor
       <button className="game__button start-button" onClick={startGame}>
         Start Game
       </button>
+      {!isLoggedIn && (<span className="game__text" onClick={() => { setPlayAsGuest(false); setMessage('Login'); setUserStatement('notReadyToPlay'); }}>
+        Login
+      </span>)}
+      {isLoggedIn && (<span className="game__text" onClick={() => { localStorage.removeItem('token'); setUserStatement('notReadyToPlay'); setIsLoggedIn(false)}}>
+        Logout
+      </span>)}
     </div>
   )
 }
-
 export default GameStart;

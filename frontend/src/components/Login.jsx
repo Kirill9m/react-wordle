@@ -6,6 +6,7 @@ const Login = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
 
   const login = async () => {
     try {
+      setMessage('Checking data...')
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: {
@@ -19,7 +20,7 @@ const Login = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
         console.log(data);
         setUserStatement('readyToPlay')
       } else {
-        setMessage('User is not found')
+        setMessage(data.status);
       }
     } catch (err) {
       console.log(err);

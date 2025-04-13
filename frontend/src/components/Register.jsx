@@ -7,6 +7,7 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
 
   const register = async () => {
     try {
+      setMessage('Checking data...')
       const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: {
@@ -21,7 +22,7 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
         setPlayAsGuest(false);
         setUserStatement('readyToPlay');
       } else {
-        setMessage('Failed register!')
+        setMessage(data.status)
       }
     } catch (err) {
       console.log(err);
@@ -62,6 +63,9 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
       <button className='game__button start-button' onClick={register}>Register</button>
       <span className="game__text" onClick={() => { setPlayAsGuest(true); setMessage('Play as guest'); setUserStatement('readyToPlay'); }}>
         Play as guest
+      </span>
+      <span className="game__text" onClick={() => { setPlayAsGuest(false); setMessage('Login'); setUserStatement('notReadyToPlay'); }}>
+        Login
       </span>
     </div>
   )

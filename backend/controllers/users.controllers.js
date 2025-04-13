@@ -6,7 +6,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return res.status(400).json({ message: 'Email and password are required', status: "Email and password are required" });
     }
     const user = await User.findOne({ email });
 
@@ -20,11 +20,11 @@ const login = async (req, res) => {
         token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }),
       });
     } else {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials', status: "Invalid credentials" });
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error logging in user' });
+    return res.status(500).json({ message: 'Error logging in user', status: "Error logging in user" });
   }
 }
 
@@ -32,12 +32,17 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email and password are required' });
+      return res.status(400).json({ message: 'Name, email and password are required', status: "Name, email and password are required" });
     }
-    const registeredUser = await User.findOne({ email });
+    const registeredUserEmail = await User.findOne({ email });
+    const registeredUserName = await User.findOne({ name });
 
-    if (registeredUser) {
-      return res.status(400).json({ message: 'Email already exists' });
+    if (registeredUserEmail) {
+      return res.status(400).json({ message: 'Email already exists', status: "Email already exists" });
+    }
+
+    if (registeredUserName) {
+      return res.status(400).json({ status: "Username already exists", status: "Username already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -58,11 +63,11 @@ const register = async (req, res) => {
         token: jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' }),
       });
     } else {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials', status: "Invalid credentials" });
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error logging in user' });
+    return res.status(500).json({ message: 'Error logging in user', status: "Error logging in user" });
   }
 }
 

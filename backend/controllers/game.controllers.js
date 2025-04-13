@@ -3,6 +3,7 @@ import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
 import HighScore from "../src/model.highScore.js";
 import * as uuid from "uuid";
+import User from '../src/model.user.js'
 
 const GAMES = [];
 
@@ -14,6 +15,21 @@ const startGame = async (req, res) => {
 
   if (!playerId || !length) {
     return res.status(400).json({ msg: "Player data is required.", status: "Player data or login is required"});
+  }
+
+  const checkIfNameExists = async (name) => {
+    const existingUser = await User.findOne({ name: name });
+    if (existingUser) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const nameExists = await checkIfNameExists(playerId);
+
+  if(nameExists && !req.user?.name){
+    return res.status(400).json({ msg: "Player exist.", status: "This name is already registered. You can't use it as a guest"});
   }
 
   const chooseLang = (lang) => {

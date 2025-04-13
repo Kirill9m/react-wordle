@@ -1,52 +1,54 @@
 import { useState } from "react";
 
-const Register = ({setPlayAsGuest, setMessage}) => {
-   const [name, setName] = useState('');
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
+const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-   const register = async () => {
+  const register = async () => {
     try {
       const response = await fetch('/api/users/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name: name, email: email, password: password }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name, email: email, password: password }),
       });
       const data = await response.json();
-      if (data.token){
+      if (data.token) {
         localStorage.setItem('token', data.token);
         console.log(data);
         setPlayAsGuest(false);
-      } else{
+        setUserStatement('readyToPlay');
+      } else {
         setMessage('Failed register!')
       }
-   } catch (err){
-    console.log(err);
+    } catch (err) {
+      console.log(err);
+    }
   }
-}
-   
-   return(
-    
-<div className='game__top'>
+
+  return (
+
+    <div className='game__top'>
       <label>
-      <input
-          type="name"
+        <input
+          type="text"
           className="game__input"
-          placeholder="Email"
+          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        </label>
+        <label>
         <input
           type="email"
           className="game__input"
           placeholder="Email"
-          value={name}
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </label>
-
       <label>
         <input
           type="password"
@@ -58,10 +60,11 @@ const Register = ({setPlayAsGuest, setMessage}) => {
       </label>
 
       <button className='game__button start-button' onClick={register}>Register</button>
-      <span className="game__text" onClick={() => (setPlayAsGuest(false)) (setMessage('Please login'))}>Login</span>
-      <span className="game__text" onClick={() => (setPlayAsGuest(false)) (setMessage('Play as guest'))}>Play as guest</span>
+      <span className="game__text" onClick={() => { setPlayAsGuest(true); setMessage('Play as guest'); setUserStatement('readyToPlay'); }}>
+        Play as guest
+      </span>
     </div>
-   )
+  )
 }
 
 export default Register;

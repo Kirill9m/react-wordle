@@ -4,6 +4,7 @@ import GamePlay from './GamePlay';
 import GameResults from './GameResults';
 import Timer from './Timer';
 import Login from './Login';
+import Register from './Register';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -12,11 +13,13 @@ const WordleGame = () => {
   const [wordLength, setWordLength] = useState(5);
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
-  const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
+  const [message, setMessage] = useState("Login or play as a guest!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [lang, setLang] = useState(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userStatement, setUserStatement] = useState('notReadyToPlay')
+  const [playAsGuest, setPlayAsGuest] = useState(false);
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -63,6 +66,8 @@ const WordleGame = () => {
       setGameData(data);
       if (!data.msg) {
         setTimerRunning(true);
+      }else{
+        // setUserStatement('notReadyToPlay')
       }
     } catch {
       setMessage('Error connecting to the server or game is not found')
@@ -109,6 +114,7 @@ const WordleGame = () => {
           console.log("You are logged in", data);
           setIsLoggedIn(true);
           setMessage(`Welcome ${data.name} Good luck!`)
+          setUserStatement('readyToPlay')
         } else {
           console.log("Error", data.message);
         }
@@ -118,7 +124,7 @@ const WordleGame = () => {
     };
   
     checkToken();
-  }, []);
+  }, [userStatement]);
 
   const printChars = () => {
     if (guessResponse.result === true) return null;
@@ -152,12 +158,13 @@ const WordleGame = () => {
       setTimerRunning(false);
     }
   }, [guessResponse]);
-
+  console.log(playAsGuest, userStatement, timerRunning, isLoggedIn)
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
-      {/* <Login/> */}
-      {!timerRunning && (
+      {((!playAsGuest) && (userStatement === 'notReadyToPlay') && (!timerRunning)) && (<Login setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}
+      {((!playAsGuest) && (userStatement === 'register') && (!timerRunning)) && (<Register setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}
+      {(userStatement === 'readyToPlay') && (!timerRunning) && (
         <GameStart
           id={id}
           setId={setId}

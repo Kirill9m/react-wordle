@@ -14,7 +14,7 @@ const optionalAuth = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log('Token is not valid, continue as a guest');
+    console.log(error);
   }
 
   next();

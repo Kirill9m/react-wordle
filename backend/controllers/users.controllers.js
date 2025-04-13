@@ -55,7 +55,7 @@ const register = async (req, res) => {
         id: newUser.id,
         email: newUser.email,
         name: newUser.name,
-        token: jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: '1h' }),
+        token: jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' }),
       });
     } else {
       return res.status(400).json({ message: 'Invalid credentials' });

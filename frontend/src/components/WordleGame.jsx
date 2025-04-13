@@ -14,7 +14,7 @@ const WordleGame = () => {
   const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
-  const [lang, setLang] = useState(null);
+  const [lang, setLang] = useState(undefined);
 
   const handleChange = () => {
     setIsChecked(!isChecked);

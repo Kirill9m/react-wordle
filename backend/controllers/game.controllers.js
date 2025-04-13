@@ -12,6 +12,8 @@ const startGame = async (req, res) => {
   const length = parseInt(req.body.length);
   const unique = req.body.unique === "true";
   const lang = req.body.lang;
+  const userId = req.user._id;
+  console.log(userId);
 
   if (!playerId || !length) {
     return res.status(400).json({ msg: "Player data is required.", status: "Player data or login is required"});
@@ -60,7 +62,8 @@ const startGame = async (req, res) => {
     isUnique: unique,
     wordLength: length,
     guesses: [],
-    language: lang
+    language: lang,
+    userId: userId
   };
   GAMES.push(game);
   console.log(game);
@@ -109,6 +112,19 @@ const makeGuess = async (req, res) => {
         score,
       });
       await newHighScore.save();
+
+      const user = await User.findById(game.userId);
+      user.games.push({
+        user: user.name,
+        time: time,
+        attemps: game.guesses.length,
+        length: game.wordLength,
+        unique: game.isUnique,
+        score,
+      });
+      user.coins += 1;
+      await user.save();
+
       status = `Gratz! Your score is ${score}, and it will be saved to the highscore!` 
     } else if(result === true && saveHighscore === false){
       status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!` 

@@ -5,7 +5,7 @@ const userShema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  coins: { type: Number, default: 1 },
+  coins: { type: Number, default: 10 },
   games: [
     {
       time: Number,

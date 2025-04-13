@@ -146,9 +146,11 @@ const getHint = async (req, res) => {
       user.coins -= 1;
       await user.save();
     }
-    
+    const letters = game.word.split('');
+    const randomIndex = Math.floor(Math.random() * letters.length);
 
-    res.json({status: "Test" })
+
+    res.json({status: `The letter ${randomIndex + 1} has the letter '${letters[randomIndex]}'` })
 };
 
 export { startGame, makeGuess, getHint };

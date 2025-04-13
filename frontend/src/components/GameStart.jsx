@@ -53,7 +53,7 @@ const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWor
       {!isLoggedIn && (<span className="game__text" onClick={() => { setPlayAsGuest(false); setMessage('Login'); setUserStatement('notReadyToPlay'); }}>
         Login
       </span>)}
-      {isLoggedIn && (<span className="game__text" onClick={() => { localStorage.removeItem('token'); setUserStatement('notReadyToPlay'); setIsLoggedIn(false)}}>
+      {isLoggedIn && (<span className="game__text" onClick={() => { localStorage.removeItem('token'); setUserStatement('notReadyToPlay'); setIsLoggedIn(false); setMessage('Login or play as a guest!')}}>
         Logout
       </span>)}
     </div>

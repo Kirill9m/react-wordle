@@ -68,7 +68,6 @@ const WordleGame = () => {
       if (!data.msg) {
         setTimerRunning(true);
       }else{
-        // setUserStatement('notReadyToPlay')
       }
     } catch {
       setMessage('Error connecting to the server or game is not found')

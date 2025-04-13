@@ -5,6 +5,7 @@ import GameResults from './GameResults';
 import Timer from './Timer';
 import Login from './Login';
 import Register from './Register';
+import CoinInfo from './CoinInfo';
 
 const WordleGame = () => {
   const [input, setInput] = useState('');
@@ -100,12 +101,6 @@ const WordleGame = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            playerId: id,
-            length: wordLength,
-            unique: unique,
-            lang: lang,
-          }),
         });
   
         const data = await response.json();
@@ -160,7 +155,9 @@ const WordleGame = () => {
   }, [guessResponse]);
   console.log(playAsGuest, userStatement, timerRunning, isLoggedIn)
   return (
+    <>
     <div className="game__container">
+    <CoinInfo isLoggedIn={isLoggedIn} timerRunning={timerRunning} gameData={gameData} setMessage={setMessage}/>
       <h1 className="game__message">{message}</h1>
       {((!playAsGuest) && (userStatement === 'notReadyToPlay') && (!timerRunning)) && (<Login setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}
       {((!playAsGuest) && (userStatement === 'register') && (!timerRunning)) && (<Register setMessage={setMessage} setUserStatement={setUserStatement} setPlayAsGuest={setPlayAsGuest}/>)}
@@ -199,6 +196,7 @@ const WordleGame = () => {
       )}
       
     </div>
+    </>
   );
 };
 

@@ -201,10 +201,6 @@ body {
   }
 }
 
-.hidden {
-  display: none;
-}
-
 /* Keyframes */
 @keyframes logo-spin {
   from {

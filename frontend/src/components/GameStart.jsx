@@ -1,12 +1,13 @@
-const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang }) => {
+const GameStart = ({isLoggedIn, id, setId, unique, setUnique, wordLength, setWordLength, startGame, lang, setLang }) => {
+
   return (
     <div className='game__top'>
-      {/* <input
+      {!isLoggedIn && (<input
         className="game__input"
         value={id}
         placeholder="Enter your name"
         onChange={(e) => setId(e.target.value)}
-      /> */}
+      />)}
 
       <section className="settings">
         <label>
@@ -28,7 +29,7 @@ const GameStart = ({ id, setId, unique, setUnique, wordLength, setWordLength, st
           Not Unique
         </label>
       </section>
-    
+
       <select value={lang} onChange={(e) => setLang(e.target.value)}>
         <option value="">Select an option</option>
         <option value="english">English</option>

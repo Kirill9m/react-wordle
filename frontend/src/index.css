@@ -115,6 +115,26 @@ body {
   cursor: pointer;
 }
 
+.login-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.toggle-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: #61dafbaa;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 0.5rem;
+  font-weight: bold;
+}
+
+.toggle-button.active {
+  background-color: #00D8FF;
+}
+
 .game__text {
   padding-top: 10px;
   color: white;

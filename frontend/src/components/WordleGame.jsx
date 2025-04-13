@@ -12,11 +12,10 @@ const WordleGame = () => {
   const [wordLength, setWordLength] = useState(5);
   const [gameData, setGameData] = useState(null);
   const [guessResponse, setGuessResponse] = useState({});
-  const [message, setMessage] = useState("Auth or play as guest!");
+  const [message, setMessage] = useState("Enter your name and click 'Start Game'!");
   const [timerRunning, setTimerRunning] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [lang, setLang] = useState(undefined);
-  const [playAsGuest, setPlayAsGuest] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleChange = () => {
@@ -85,6 +84,42 @@ const WordleGame = () => {
     }
   }, [guessResponse, gameData]);
 
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem('token');
+  
+      if (token) {
+        const response = await fetch('/api/users/current', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            playerId: id,
+            length: wordLength,
+            unique: unique,
+            lang: lang,
+          }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          console.log("You are logged in", data);
+          setIsLoggedIn(true);
+          setMessage(`Welcome ${data.name} Good luck!`)
+        } else {
+          console.log("Error", data.message);
+        }
+      } else {
+        console.log("You are not logged in");
+      }
+    };
+  
+    checkToken();
+  }, []);
+
   const printChars = () => {
     if (guessResponse.result === true) return null;
     if (!Array.isArray(guessResponse.result)) return null;
@@ -121,8 +156,8 @@ const WordleGame = () => {
   return (
     <div className="game__container">
       <h1 className="game__message">{message}</h1>
-      {playAsGuest && (<Login setPlayAsGuest={setPlayAsGuest} setMessage={setMessage}/>)}
-      {!playAsGuest && !timerRunning && (
+      {/* <Login/> */}
+      {!timerRunning && (
         <GameStart
           id={id}
           setId={setId}
@@ -133,9 +168,10 @@ const WordleGame = () => {
           startGame={startGame}
           lang={lang}
           setLang={setLang}
+          isLoggedIn={isLoggedIn}
         />
       )}
-      {!playAsGuest && timerRunning && (
+      {timerRunning && (
         <>
           <Timer gameData={gameData} timerRunning={timerRunning} />
           <GamePlay
@@ -150,6 +186,7 @@ const WordleGame = () => {
           <GameResults guessResponse={guessResponse} />
         </>
       )}
+      
     </div>
   );
 };

@@ -28,7 +28,7 @@ const Login = ({setPlayAsGuest, setMessage}) => {
    
    return(
     
-<div className='game__top'>
+<div className='game__top1'>
       <label>
         <input
           type="email"

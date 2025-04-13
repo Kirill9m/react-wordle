@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
 import User from '../src/model.user.js'
-import mongoose from 'mongoose';
 
 const auth = async (req, res, next) => {
     try {

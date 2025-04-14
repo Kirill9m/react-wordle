@@ -11,7 +11,7 @@ const login = async (req, res) => {
 
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    if(validateEmail){
+    if(!validateEmail(email)){
       return res.status(400).json({ message: 'Invalid email format', status: 'Invalid email format' })
     }
 

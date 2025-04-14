@@ -100,7 +100,6 @@ const WordleGame = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
         const data = await response.json();
   
         if (response.ok) {
@@ -111,7 +110,6 @@ const WordleGame = () => {
           console.log("Error", data.message);
         }
       } else {
-        console.log("You are not logged in");
       }
     };
   

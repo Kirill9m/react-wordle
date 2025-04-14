@@ -18,7 +18,6 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
       const data = await response.json();
       if (data.token) {
         localStorage.setItem('token', data.token);
-        console.log(data);
         setPlayAsGuest(false);
         setUserStatement('readyToPlay');
       } else {

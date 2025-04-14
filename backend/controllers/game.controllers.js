@@ -13,12 +13,12 @@ const startGame = async (req, res) => {
   const unique = req.body.unique === "true";
   const lang = req.body.lang;
   let userId;
-  if(req.user?.name){
+  if (req.user?.name) {
     userId = req.user._id;
   }
 
   if (!playerId || !length) {
-    return res.status(400).json({ msg: "Player data is required.", status: "Player data or login is required"});
+    return res.status(400).json({ msg: "Player data is required.", status: "Player data or login is required" });
   }
 
   const checkIfNameExists = async (name) => {
@@ -32,22 +32,22 @@ const startGame = async (req, res) => {
 
   const nameExists = await checkIfNameExists(playerId);
 
-  if(nameExists && !req.user?.name){
-    return res.status(400).json({ msg: "Player exist.", status: "This name is already registered. You can't use it as a guest"});
+  if (nameExists && !req.user?.name) {
+    return res.status(400).json({ msg: "Player exist.", status: "This name is already registered. You can't use it as a guest" });
   }
 
   const chooseLang = (lang) => {
-    if(lang == 'swedish'){
+    if (lang == 'swedish') {
       return swedish;
-    }else if(lang == 'russian'){
+    } else if (lang == 'russian') {
       return russian;
-    }else{
+    } else {
       return english;
     }
   }
 
   const chosenWord = chooseWord(chooseLang(lang), length, unique);
-  
+
 
   if (chosenWord === false) {
     return res.status(400).json({
@@ -83,39 +83,39 @@ const makeGuess = async (req, res) => {
   if (!game) {
     res.status(404).end("Game not found");
   }
-    const guess = req.body.guess;
-    const saveHighscore = req.body.highscore === true || req.body.highscore === 'true';
+  const guess = req.body.guess;
+  const saveHighscore = req.body.highscore === true || req.body.highscore === 'true';
 
-    if (typeof guess !== "string" || guess.length !== game.wordLength) {
-      return res.status(400).json({
-        msg: "Invalid guess",
-        status: `The word should be ${game.wordLength} characters long!`,
-      });
-    }
-    
-    game.guesses.push(guess);
+  if (typeof guess !== "string" || guess.length !== game.wordLength) {
+    return res.status(400).json({
+      msg: "Invalid guess",
+      status: `The word should be ${game.wordLength} characters long!`,
+    });
+  }
 
-    console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
+  game.guesses.push(guess);
 
-    const result = checkWord(guess, game.word);
-    let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;
+  console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
-    let time = Math.round((new Date() - game.gameStarted) / 1000);
-    let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
-    
-    if (result === true && saveHighscore === true) {
+  const result = checkWord(guess, game.word);
+  let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;
 
-      const newHighScore = new HighScore({
-        user: game.id,
-        time: time,
-        attemps: game.guesses.length,
-        length: game.wordLength,
-        unique: game.isUnique,
-        score,
-      });
-      await newHighScore.save();
+  let time = Math.round((new Date() - game.gameStarted) / 1000);
+  let score = game.wordLength * 100 + (game.isUnique ? 200 : 0) - time * 2 - game.guesses.length * 10;
 
-      if(game.userId !== undefined){
+  if (result === true && saveHighscore === true) {
+
+    const newHighScore = new HighScore({
+      user: game.id,
+      time: time,
+      attemps: game.guesses.length,
+      length: game.wordLength,
+      unique: game.isUnique,
+      score,
+    });
+    await newHighScore.save();
+
+    if (game.userId !== undefined) {
       const user = await User.findById(game.userId);
       user.games.push({
         user: user.name,
@@ -129,36 +129,36 @@ const makeGuess = async (req, res) => {
       await user.save();
     }
 
-      status = `Gratz! Your score is ${score}, and it will be saved to the highscore!` 
-    } else if(result === true && saveHighscore === false){
-      status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!` 
-    }
-    res.json({ result, guess, timeStarted: game.gameStarted, guesses: game.guesses, score, status: status })
+    status = `Gratz! Your score is ${score}, and it will be saved to the highscore!`
+  } else if (result === true && saveHighscore === false) {
+    status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!`
+  }
+  res.json({ result, guess, timeStarted: game.gameStarted, guesses: game.guesses, score, status: status })
 };
 
 const getHint = async (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
   if (!game) {
     res.status(404).end("Game not found");
-  }   
-      if(game.userId !== undefined){
-      const user = await User.findById(game.userId);
-      user.coins -= 1;
-      await user.save();
-    }
-
-    const showHint = () => {
-    if(user.coins > 0){
-    const letters = game.word.split('');
-    const randomIndex = Math.floor(Math.random() * letters.length);
-    return {status: `The letter ${randomIndex + 1} has the letter '${letters[randomIndex]}'` };
-    }else{
-      return {status: `You have no coins! :( Play more to obtain coins` };
-    }
   }
 
+  const currentUser = await User.findById(game.userId);
 
-    res.json(showHint)
+  if (currentUser.coins > 0) {
+      currentUser.coins -= 1;
+      await currentUser.save();
+  } else {
+    return res.status(400).json({ status: 'Not enough coins to get a hint' });
+  }
+
+  const showHint = (game) => {
+    const letters = game.word.split('');
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    return { status: `The letter ${randomIndex + 1} has the letter '${letters[randomIndex]}'` }
+  }
+
+  res.json(showHint(game))
 };
+
 
 export { startGame, makeGuess, getHint };

@@ -143,16 +143,22 @@ const getHint = async (req, res) => {
   }   
       if(game.userId !== undefined){
       const user = await User.findById(game.userId);
-      if(user.coins > 0){
       user.coins -= 1;
       await user.save();
-      }
     }
+
+    const showHint = () => {
+    if(user.coins > 0){
     const letters = game.word.split('');
     const randomIndex = Math.floor(Math.random() * letters.length);
+    return {status: `The letter ${randomIndex + 1} has the letter '${letters[randomIndex]}'` };
+    }else{
+      return {status: `You have no coins! :( Play more to obtain coins` };
+    }
+  }
 
 
-    res.json({status: `The letter ${randomIndex + 1} has the letter '${letters[randomIndex]}'` })
+    res.json(showHint)
 };
 
 export { startGame, makeGuess, getHint };

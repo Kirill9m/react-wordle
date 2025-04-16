@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
-import classes from './CoinInfo.module.css'
+// @ts-ignore
+import classes from './CoinInfo.module.css';
+import { FC } from "react";
 
-const CoinInfo = ({ isLoggedIn, timerRunning, gameData, setMessage, message }) => {
+type Props = {
+  isLoggedIn: boolean;
+  timerRunning: boolean;
+  gameData: { gameId: string};
+  setMessage: (setMessage: String) => void;
+  message: (message: string) => void;
+}
+
+const CoinInfo: FC<Props> = ({ isLoggedIn, timerRunning, gameData, setMessage, message }) => {
   const [coins, setCoins] = useState(null);
 
 

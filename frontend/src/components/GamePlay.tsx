@@ -1,4 +1,15 @@
-const GamePlay = ({ isChecked, handleChange, input, setInput, wordLength, sendWord }) => {
+import { FC } from "react";
+
+type Props = {
+  isChecked: boolean;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  input: string;
+  setInput: (value: string) => void;
+  wordLength: number;
+  sendWord: () => void;
+}
+
+const GamePlay: FC<Props> = ({ isChecked, handleChange, input, setInput, wordLength, sendWord }) => {
   return(<div className='game__bottom'>
         <label className="game__highscore">
           I want to be part of the highscore list:

@@ -13,10 +13,10 @@ const userShema = new mongoose.Schema({
       length: Number,
       unique: Boolean,
       score: Number,
-    }
-  ]
+    },
+  ],
 });
 
-const Users = mongoose.model('user', userShema);
+const Users = mongoose.model("user", userShema);
 
 export default Users;

@@ -9,6 +9,6 @@ const highScoreSchema = new mongoose.Schema({
   score: Number,
 });
 
-const HighScore = mongoose.model('score', highScoreSchema);
+const HighScore = mongoose.model("score", highScoreSchema);
 
 export default HighScore;

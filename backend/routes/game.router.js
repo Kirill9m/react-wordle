@@ -1,5 +1,9 @@
 import express from "express";
-import { startGame, makeGuess, getHint } from "../controllers/game.controllers.js";
+import {
+  startGame,
+  makeGuess,
+  getHint,
+} from "../controllers/game.controllers.js";
 import optionalAuth from "../middleware/optionalAuth.js";
 
 const router = express.Router();

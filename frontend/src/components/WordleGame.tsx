@@ -7,6 +7,7 @@ import Login from './Login';
 import Register from './Register';
 import CoinInfo from './CoinInfo';
 import { GameData } from '../types';
+import { UserStatement } from '../types';
 
 type Result = {
   letter: string;
@@ -21,8 +22,6 @@ type GuessResponse = {
   status: string;
   msg?: string;
 };
-
-type UserStatement = 'notReadyToPlay' | 'readyToPlay' | 'register';
 
 const WordleGame = () => {
   const [input, setInput] = useState<string>('');

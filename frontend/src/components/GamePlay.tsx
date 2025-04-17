@@ -17,7 +17,7 @@ const GamePlay: FC<Props> = ({
   wordLength,
   sendWord,
 }) => {
-  const maxLengthAsNumber = parseInt(wordLength, 10)
+  const maxLengthAsNumber = parseInt(wordLength, 10);
   return (
     <div className="game__bottom">
       <label className="game__highscore">

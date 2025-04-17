@@ -9,4 +9,3 @@ export type GameData = {
 };
 
 export type UserStatement = 'notReadyToPlay' | 'readyToPlay' | 'register';
-

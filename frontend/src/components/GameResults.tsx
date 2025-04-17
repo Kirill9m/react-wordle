@@ -1,5 +1,4 @@
-import { useEffect, useState, FC } from 'react';
-import { ReactNode } from 'react';
+import { useEffect, useState, FC, ReactNode } from 'react';
 
 type Result = {
   letter: string;
@@ -19,13 +18,12 @@ type Props = {
   guessResponse: GuessResponse;
 };
 
-const printChars = (result: Result[], rowIndex: number): ReactNode => {
-  // Проверка на массив
+const printChars = (result: Result[]): ReactNode => {
   if (!Array.isArray(result)) return null;
 
   return (
-    <div className="result-row" key={`result-row-${rowIndex}`}>
-      {result.map((item, itemIndex) => {
+    <div className="result-item">
+      {result.map((item, index) => {
         let className = 'result-item';
 
         if (item.result === 'incorrect') {
@@ -37,7 +35,7 @@ const printChars = (result: Result[], rowIndex: number): ReactNode => {
         }
 
         return (
-          <span key={`result-item-${rowIndex}-${itemIndex}`} className={className}>
+          <span key={index} className={className}>
             {item.letter.toUpperCase()}
           </span>
         );
@@ -47,24 +45,22 @@ const printChars = (result: Result[], rowIndex: number): ReactNode => {
 };
 
 const GameResults: FC<Props> = ({ guessResponse }) => {
-  // --- ИСПРАВЛЕНИЕ: Тип состояния - массив массивов Result ---
   const [prevResult, setPrevResult] = useState<Result[][]>([]);
 
   useEffect(() => {
-    // Обновляем, только если результат - массив
     if (Array.isArray(guessResponse.result)) {
+      const currentResultArray = guessResponse.result;
       setPrevResult((currentPrevResults) => {
-        const newResultList: Result[][] = [guessResponse.result, ...currentPrevResults];
-        return newResultList.slice(0, 6);
+        const newResultList: Result[][] = [currentResultArray, ...currentPrevResults];
+        return newResultList.slice(0, 5);
       });
     }
   }, [guessResponse]);
 
   return (
     <div className="result-container">
-      {/* Итерируем по массиву массивов */}
-      {prevResult.map((singleResultArray, index) => (
-        printChars(singleResultArray, index)
+      {prevResult.map((result, index) => (
+        <div key={index}>{printChars(result)}</div>
       ))}
     </div>
   );

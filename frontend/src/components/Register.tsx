@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { FC, useState } from 'react';
+import { UserStatement } from '../types';
 
-const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
+type Props = {
+  setPlayAsGuest: (guest: boolean) => void;
+  setMessage: (msg: string) => void;
+  setUserStatement: (statement: UserStatement) => void;
+};
+
+const Register: FC<Props> = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const register = async () => {
     try {
-      setMessage('Checking data...')
+      setMessage('Checking data...');
       const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name: name, email: email, password: password }),
       });
@@ -21,16 +28,15 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
         setPlayAsGuest(false);
         setUserStatement('readyToPlay');
       } else {
-        setMessage(data.status)
+        setMessage(data.status);
       }
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
-
-    <div className='game__top'>
+    <div className="game__top">
       <label>
         <input
           type="text"
@@ -39,8 +45,8 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        </label>
-        <label>
+      </label>
+      <label>
         <input
           type="email"
           className="game__input"
@@ -59,15 +65,31 @@ const Register = ({ setPlayAsGuest, setMessage, setUserStatement }) => {
         />
       </label>
 
-      <button className='game__button start-button' onClick={register}>Register</button>
-      <span className="game__text" onClick={() => { setPlayAsGuest(true); setMessage('Play as guest'); setUserStatement('readyToPlay'); }}>
+      <button className="game__button start-button" onClick={register}>
+        Register
+      </button>
+      <span
+        className="game__text"
+        onClick={() => {
+          setPlayAsGuest(true);
+          setMessage('Play as guest');
+          setUserStatement('readyToPlay');
+        }}
+      >
         Play as guest
       </span>
-      <span className="game__text" onClick={() => { setPlayAsGuest(false); setMessage('Login'); setUserStatement('notReadyToPlay'); }}>
+      <span
+        className="game__text"
+        onClick={() => {
+          setPlayAsGuest(false);
+          setMessage('Login');
+          setUserStatement('notReadyToPlay');
+        }}
+      >
         Login
       </span>
     </div>
-  )
-}
+  );
+};
 
 export default Register;

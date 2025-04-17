@@ -1,34 +1,40 @@
-import { useState } from "react";
+import { FC, useState } from 'react';
+import { UserStatement } from '../types';
 
-const Login = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
+type Props = {
+  setMessage: (msg: string) => void;
+  setUserStatement: (statement: UserStatement) => void;
+  setPlayAsGuest: (guest: boolean) => void;
+};
+
+const Login: FC<Props> = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
   const login = async () => {
     try {
-      setMessage('Checking data...')
+      setMessage('Checking data...');
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: name, password: password }),
       });
       const data = await response.json();
       if (data.token) {
         localStorage.setItem('token', data.token);
-        setUserStatement('readyToPlay')
+        setUserStatement('readyToPlay');
       } else {
         setMessage(data.status);
       }
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
-
-    <div className='game__top'>
+    <div className="game__top">
       <label>
         <input
           type="email"
@@ -49,15 +55,30 @@ const Login = ({ setMessage, setUserStatement, setPlayAsGuest }) => {
         />
       </label>
 
-      <button className='game__button start-button' onClick={login}>Login</button>
-      <span className="game__text" onClick={() => { setPlayAsGuest(true); setMessage('Play as guest'); setUserStatement('readyToPlay'); }}>
+      <button className="game__button start-button" onClick={login}>
+        Login
+      </button>
+      <span
+        className="game__text"
+        onClick={() => {
+          setPlayAsGuest(true);
+          setMessage('Play as guest');
+          setUserStatement('readyToPlay');
+        }}
+      >
         Play as guest
       </span>
-      <span className="game__text" onClick={() => { setMessage('Register'); setUserStatement('register'); }}>
+      <span
+        className="game__text"
+        onClick={() => {
+          setMessage('Register');
+          setUserStatement('register');
+        }}
+      >
         Register
       </span>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

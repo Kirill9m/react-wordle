@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [react()],
   css: {
     modules: {
-      scopeBehaviour: 'local'
-    }
+      scopeBehaviour: 'local',
+    },
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:5080'  
-    }
-  }
+      '/api': 'http://localhost:5080',
+    },
+  },
 });

@@ -133,7 +133,7 @@ const makeGuess = async (req, res) => {
   } else if (result === true && saveHighscore === false) {
     status = `Gratz! Your score is ${score}, and it will not be saved to the highscore!`
   }
-  res.json({ result, guess, timeStarted: game.gameStarted, guesses: game.guesses, score, status: status })
+  res.json({ result, guess, timeStarted: game.gameStarted, score, status: status })
 };
 
 const getHint = async (req, res) => {
@@ -145,8 +145,8 @@ const getHint = async (req, res) => {
   const currentUser = await User.findById(game.userId);
 
   if (currentUser.coins > 0) {
-      currentUser.coins -= 1;
-      await currentUser.save();
+    currentUser.coins -= 1;
+    await currentUser.save();
   } else {
     return res.status(400).json({ status: 'Not enough coins to get a hint' });
   }
@@ -159,6 +159,5 @@ const getHint = async (req, res) => {
 
   res.json(showHint(game))
 };
-
 
 export { startGame, makeGuess, getHint };

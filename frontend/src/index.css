@@ -29,7 +29,6 @@ body {
 .navbar {
   color: white;
   margin-left: 1rem;
-
 }
 .navbar a {
   color: white;
@@ -125,7 +124,7 @@ body {
 }
 
 .toggle-button.active {
-  background-color: #00D8FF;
+  background-color: #00d8ff;
 }
 
 .game__text {
@@ -139,7 +138,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   width: 75px;
-  text-align: center
+  text-align: center;
 }
 
 .game__text:hover {
@@ -191,17 +190,17 @@ body {
   .correct {
     background-color: green;
   }
-  
+
   .misplaced {
     background-color: orange;
   }
-  
+
   .incorrect {
     background-color: gray;
   }
 }
 
-.coins{
+.coins {
   color: white;
   margin-bottom: 10px;
 }

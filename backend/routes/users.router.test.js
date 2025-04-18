@@ -55,10 +55,14 @@ describe('User /api login & register & current', () => {
         email: 'testuser@testuser.com',
         password: 'testpass',
       });
-      
-      console.log(response.body);
-
       expect(response.statusCode).toBe(201);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          email: 'testuser@testuser.com',
+          name: 'testuser',
+          token: expect.any(String),
+        })
+      );
     });
   });
 
@@ -73,6 +77,13 @@ describe('User /api login & register & current', () => {
         });
 
       expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          email: 'testuser@testuser.com',
+          name: 'testuser',
+          token: expect.any(String),
+        })
+      );
     });
   });
 
@@ -83,6 +94,14 @@ describe('User /api login & register & current', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.statusCode).toBe(200);
+      expect(response.body).toMatchObject({
+        _id: expect.any(String),
+        name: 'testuser',
+        email: 'testuser@testuser.com',
+        coins: expect.any(Number),
+        games: expect.any(Array),
+        __v: expect.any(Number),
+      });
     });
   });
 });

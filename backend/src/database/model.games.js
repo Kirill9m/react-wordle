@@ -6,7 +6,8 @@ const gamesSchema = new mongoose.Schema({
       gameStarted: {
         type: Date,
         required: true,
-        default: Date.now
+        default: Date.now,
+        expires: 3600,
       },
       isUnique: Boolean,
       wordLength: Number,
@@ -18,3 +19,5 @@ const gamesSchema = new mongoose.Schema({
 const Games = mongoose.model('currentGames', gamesSchema);
 
 export default Games;
+
+// 60 * 60 * 24 * 7,

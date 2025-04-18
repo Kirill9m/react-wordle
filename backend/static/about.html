@@ -5,23 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>About</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="static/main.css"
-    />
+    <link rel="stylesheet" type="text/css" media="screen" href="static/main.css" />
   </head>
   <body>
     <ul class="about__container container">
       <strong>About:</strong>
-      <li>Frontend: React (for building the user interface).</li>
-      <li>Backend: Node.js with Express (for creating the server and API).</li>
-      <li>Database: MongoDB (for storing game state and high scores).</li>
-      <li>Testing: Jest (for unit testing).</li>
-      <li>Other: HTML, CSS, JavaScript.</li>
-      <li>The total score is calculated using the formula:</li>
-      <li>(wordLength * 100) + (isUnique ? 200 : 0) - (timeInSec * 2) - (attemps * 10)</li>
+      <li><strong>Frontend:</strong> React (for building the user interface).</li>
+      <li><strong>Backend:</strong> Node.js with Express (for creating the server and API).</li>
+      <li>
+        <strong>Database:</strong> MongoDB (for storing game state, high scores, and user data).
+      </li>
+      <li>
+        <strong>User Security:</strong> Passwords are encrypted using bcrypt with a unique salt for
+        each user.
+      </li>
+      <li><strong>Testing:</strong> Jest (for unit testing).</li>
+      <li><strong>Other:</strong> HTML, CSS, JavaScript.</li>
+      <li>
+        <strong>Score Calculation:</strong>
+          <li>(wordLength * 100) + (isUnique ? 200 : 0) - (timeInSec * 2) - (attempts * 10)</li>
+      </li>
+      <li>
+        <strong>Game Features:</strong>
+          <li>Users can choose the word length, uniqueness, and language.</li>
+          <li>Players make guesses, with feedback provided for each guess.</li>
+          <li>High scores are calculated and stored in the database.</li>
+          <li>Players can spend coins to get hints.</li>
+          <li>Monetary rewards are given for correct answers.</li>
+          <li>Game sessions are automatically deleted after 15 minutes of inactivity.</li>
+      </li>
+      <li>
+        <strong>Security:</strong> All game and user data is securely managed, and every request and
+        validation is processed through the server to ensure full security.
+      </li>
     </ul>
     <a href="/" class="btn">Back</a>
   </body>

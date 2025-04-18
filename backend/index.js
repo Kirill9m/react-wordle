@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 5080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -42,8 +43,8 @@ app.get("/about", async (req, res) => {
 });
 
 app.use("/assets", express.static("../frontend/dist/assets"));
-app.use("/static", express.static("./static"));
+app.use("/static", express.static("./static")); 
 
-app.listen(5080, () => {
-  console.log(`Server running on 5080`);
+app.listen(port, () => {
+  console.log(`Server running on ${port}`);
 });

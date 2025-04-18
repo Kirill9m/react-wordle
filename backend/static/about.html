@@ -31,8 +31,14 @@
           <li>Players make guesses, with feedback provided for each guess.</li>
           <li>High scores are calculated and stored in the database.</li>
           <li>Players can spend coins to get hints.</li>
-          <li>Monetary rewards are given for correct answers.</li>
-          <li>Game sessions are automatically deleted after 15 minutes of inactivity.</li>
+          <li>Players are rewarded with coins for solving a word.</li>
+          <li>The number of coins depends on the word length:</li>
+            <ul class="about__container container">
+              <li>4 letters or less: 1 coin</li>
+              <li>5–7 letters: 2 coins</li>
+              <li>8–10 letters: 3 coins</li>
+            </ul>
+          <li>Game sessions are automatically deleted after 60 minutes of inactivity.</li>
       </li>
       <li>
         <strong>Security:</strong> All game and user data is securely managed, and every request and

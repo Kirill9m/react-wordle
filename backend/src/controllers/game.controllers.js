@@ -126,9 +126,9 @@ const makeGuess = async (req, res) => {
         unique: game.isUnique,
         score,
       });
-      if (game.wordLength >= 6 && game.wordLength <= 8) {
+      if (game.wordLength >= 5 && game.wordLength <= 7) {
         user.coins += 2;
-      } else if (game.wordLength >= 9 && game.wordLength <= 13) {
+      } else if (game.wordLength >= 8 && game.wordLength <= 10) {
         user.coins += 3;
       } else user.coins += 1;
       await user.save();

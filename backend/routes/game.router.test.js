@@ -1,18 +1,17 @@
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it} from '@jest/globals';
 import request from 'supertest';
 import express from 'express';
 import gameRouter from './game.router.js';
 import usersRouter from './users.router.js';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import jwt from 'jsonwebtoken';
 
 const app = express();
 app.use(express.json());
 app.use('/api/games', gameRouter);
 app.use('/api/users', usersRouter);
 
-describe('Api & database', () => {
+describe('Game /api start & guess & hint', () => {
   let mongo = MongoMemoryServer;
   let token;
   let gameId;

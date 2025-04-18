@@ -77,7 +77,6 @@ const startGame = async (req, res) => {
     userId: userId,
   };
   GAMES.push(game);
-  console.log(game);
   res.json({
     status: `Player ${game.id}, your word is ${length} characters long.`,
     length: game.length,
@@ -104,8 +103,6 @@ const makeGuess = async (req, res) => {
   }
 
   game.guesses.push(guess);
-
-  console.log(`Player: ${game.id} guessed: ${guess} ${saveHighscore}`);
 
   const result = checkWord(guess, game.word);
   let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;

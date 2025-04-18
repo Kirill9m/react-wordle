@@ -1,0 +1,21 @@
+{
+  "name": "wordle-game",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Kirill9m/react-wordle#readme",
+  "bugs": {
+    "url": "https://github.com/Kirill9m/react-wordle/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kirill9m/react-wordle.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && npm install && node ."
+  }
+}

@@ -3,20 +3,30 @@ import request from 'supertest';
 import express from 'express';
 import gameRouter from './game.router.js';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config();
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
 const app = express();
 app.use(express.json());
 app.use('/api/games', gameRouter);
 
 describe('Api & database', () => {
-  beforeEach(async () => {
-    await mongoose.connect(process.env.MONGO);
+  let mongo = MongoMemoryServer;
+  beforeAll(async () => {
+    mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+    await mongoose.connect(uri);
   });
-
+  
   afterEach(async () => {
+    const collections = await mongoose.connection.db.collections();
+    for (let collection of collections) {
+      await collection.deleteMany({});
+    }
+  });
+  
+  afterAll(async () => {
     await mongoose.disconnect();
+    await mongo.stop();
   });
 
   describe('POST /api/games', () => {

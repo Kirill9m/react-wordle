@@ -30,7 +30,7 @@ const CoinInfo: FC<Props> = ({ isLoggedIn, timerRunning, gameId, setMessage, mes
       setCoins(data.coins);
     };
     checkCoins();
-  }, [message]);
+  }, [message, isLoggedIn]);
 
   const getHint = async () => {
     try {

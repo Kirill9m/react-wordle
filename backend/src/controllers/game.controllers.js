@@ -2,8 +2,8 @@ import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
 import HighScore from "../database/model.highScore.js";
-import * as uuid from "uuid";
 import User from "../database/model.user.js";
+import Games from '../database/model.games.js'
 
 const GAMES = [];
 
@@ -65,8 +65,7 @@ const startGame = async (req, res) => {
     });
   }
 
-  const game = {
-    gameId: uuid.v4(),
+  const newGame = new Games({
     id: playerId,
     word: chosenWord,
     gameStarted: new Date(),
@@ -75,21 +74,22 @@ const startGame = async (req, res) => {
     guesses: [],
     language: lang,
     userId: userId,
-  };
-  GAMES.push(game);
+  });
+  
+  await newGame.save();
   res.json({
-    status: `Player ${game.id}, your word is ${length} characters long.`,
-    length: game.length,
-    gameStarted: game.gameStarted,
-    gameId: game.gameId,
-    language: game.language,
+    status: `Player ${newGame.id}, your word is ${length} characters long.`,
+    length: newGame.wordLength,
+    gameStarted: newGame.gameStarted,
+    gameId: newGame._id,
+    language: newGame.language,
   });
 };
 
 const makeGuess = async (req, res) => {
-  const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
+  const game = await Games.findById(req.params.id);
   if (!game) {
-    res.status(404).end("Game not found");
+    return res.status(404).end("Game not found");
   }
   const guess = req.body.guess;
   const saveHighscore =
@@ -103,6 +103,7 @@ const makeGuess = async (req, res) => {
   }
 
   game.guesses.push(guess);
+  await game.save();
 
   const result = checkWord(guess, game.word);
   let status = `Player ${game.id}, your word is ${game.wordLength} characters long.`;
@@ -153,9 +154,13 @@ const makeGuess = async (req, res) => {
 };
 
 const getHint = async (req, res) => {
-  const game = GAMES.find((savedGame) => savedGame.gameId == req.params.id);
+  const game = await Games.findById(req.params.id);
   if (!game) {
     res.status(404).end("Game not found");
+  }
+
+  if (!game.userId) {
+    return res.status(400).json({ status: "Only logged-in users can get hints" });
   }
 
   const currentUser = await User.findById(game.userId);

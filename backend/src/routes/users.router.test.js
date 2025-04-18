@@ -1,7 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import request from 'supertest';
 import express from 'express';
-import gameRouter from './game.router.js';
 import usersRouter from './users.router.js';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';

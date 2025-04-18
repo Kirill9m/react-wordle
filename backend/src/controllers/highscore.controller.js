@@ -1,4 +1,4 @@
-import HighScore from "../src/model.highScore.js";
+import HighScore from "../database/model.highScore.js";
 
 export const getHighscore = async (req, res) => {
 

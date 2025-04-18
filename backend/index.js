@@ -1,9 +1,9 @@
 import express from "express";
 import fs from "fs/promises";
 import dotenv from "dotenv";
-import gameRouter from "./routes/game.router.js";
-import highScoreRouter from "./routes/highscore.router.js";
-import usersRouter from "./routes/users.router.js";
+import gameRouter from "./src/routes/game.router.js";
+import highScoreRouter from "./src/routes/highscore.router.js";
+import usersRouter from "./src/routes/users.router.js";
 import mongoose from "mongoose";
 
 dotenv.config();

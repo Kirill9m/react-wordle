@@ -1,9 +1,9 @@
 import { chooseWord } from "../logic/chooseWord.js";
 import { checkWord } from "../logic/checkWord.js";
 import { english, swedish, russian } from "../logic/words.js";
-import HighScore from "../src/model.highScore.js";
+import HighScore from "../database/model.highScore.js";
 import * as uuid from "uuid";
-import User from "../src/model.user.js";
+import User from "../database/model.user.js";
 
 const GAMES = [];
 

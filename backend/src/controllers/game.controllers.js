@@ -5,8 +5,6 @@ import HighScore from "../database/model.highScore.js";
 import User from "../database/model.user.js";
 import Games from '../database/model.games.js'
 
-const GAMES = [];
-
 const startGame = async (req, res) => {
   const playerId = req.user?.name || req.body?.playerId;
   const length = parseInt(req.body.length);

@@ -1,1 +1,1 @@
-[![Kirill's GitHub Stats](https://github-readme-stats.vercel.app/api?username=Kirill9m&show_icons=true&count_private=true&theme=radical)](https://github.com/Kirill9m)
+![GitHub Metrics](https://github-readme-metrics.vercel.app/api?username=Kirill9m&show_icons=true&count_private=true&theme=dracula)
